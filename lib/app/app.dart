@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:lyrical/app/router.dart';
+import 'package:lyrical/app/theme.dart';
+import 'package:lyrical/core/constants/app_strings.dart';
+
+class LyricalApp extends StatelessWidget {
+  const LyricalApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: AppStrings.appTitle,
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      locale: const Locale('es'),
+      supportedLocales: const [Locale('es'), Locale('en')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      routerConfig: appRouter,
+    );
+  }
+}

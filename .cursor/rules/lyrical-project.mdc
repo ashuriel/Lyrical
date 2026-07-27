@@ -1,0 +1,71 @@
+---
+description: Core project identity, architecture, security, and workflow rules for Lyrical
+alwaysApply: true
+---
+
+# Lyrical Project Rules
+
+Lyrical is an anonymous poetry mobile platform built with Flutter and Supabase.
+
+## Core Identity
+
+- Users authenticate with a private email and password.
+- Every user receives a randomly generated anonymous display name.
+- The anonymous display name consists of a positive adjective plus an object, animal, or natural element.
+- The anonymous display name must be unique and immutable.
+- A user may edit only their gender, biography, and avatar.
+- Never expose a user's email in public profile queries or UI.
+
+## Technology
+
+- Flutter with null safety.
+- Supabase Auth, PostgreSQL Database, Storage, and Row Level Security.
+- flutter_riverpod for state management.
+- go_router for navigation.
+- Feature-first project structure.
+- Repository pattern for Supabase access.
+- Material 3.
+- Spanish is the default UI language.
+- Code identifiers and comments must be in English.
+
+## Architecture
+
+- UI widgets must not call Supabase directly.
+- Screens communicate with Riverpod providers.
+- Providers communicate with repositories.
+- Repositories contain Supabase queries.
+- Reusable UI must be placed in `core/widgets` or feature widgets.
+- Avoid unnecessary abstraction and overengineering.
+- Keep files focused and reasonably small.
+
+## Security
+
+- Never place a Supabase service_role key in the Flutter application.
+- Use only the publishable/anon client key in Flutter.
+- All exposed database tables must use Row Level Security.
+- Never rely only on Flutter validation for authorization.
+- A user may update or delete only their own allowed content.
+- Poetry moderation status cannot be changed by a normal client user.
+- Public users may read only approved, visible, and non-deleted poems.
+
+## Poetry Rules
+
+- New poems start with status `pending`.
+- Valid moderation statuses are `pending`, `approved`, and `rejected`.
+- Authors cannot edit a poem's title or content after submission.
+- Authors may hide, unhide, or delete their own poems.
+- Hidden status is separate from moderation status.
+- Prefer soft deletion with `deleted_at`.
+
+## Development Workflow
+
+- Before making changes, inspect the existing repository.
+- Explain briefly which files will be created or modified.
+- Implement only the requested phase.
+- Do not rewrite unrelated files.
+- Preserve working functionality.
+- Handle loading, empty, success, and error states.
+- Avoid deprecated Flutter or Supabase APIs.
+- Run `dart format` and `flutter analyze` after relevant changes.
+- Report remaining warnings or errors honestly.
+- Never invent database columns that are not defined in the project schema.
