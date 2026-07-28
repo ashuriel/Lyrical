@@ -1,24 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 
-/// Temporary splash shown before entering the main shell.
-class SplashScreen extends StatefulWidget {
+/// Calm splash shown while the initial auth state resolves.
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Future<void>.delayed(const Duration(milliseconds: 1200), () {
-      if (!mounted) return;
-      context.go('/explore');
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +21,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   AppStrings.appTitle,
                   style: theme.textTheme.headlineMedium,
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  AppStrings.splashTagline,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyLarge,
+                const SizedBox(height: 28),
+                const SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: CircularProgressIndicator(strokeWidth: 2.5),
                 ),
               ],
             ),

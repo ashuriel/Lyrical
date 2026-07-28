@@ -24,4 +24,32 @@ abstract final class AppStrings {
   static const String profileTitle = 'Perfil';
   static const String profileDescription =
       'Consulta y edita tu perfil anónimo.';
+
+  static const String emailLabel = 'Correo electrónico';
+  static const String passwordLabel = 'Contraseña';
+  static const String confirmPasswordLabel = 'Confirmar contraseña';
+
+  static const String loginTitle = 'Iniciar sesión';
+  static const String loginSubtitle = 'Entra con tu correo privado.';
+  static const String loginButton = 'Iniciar sesión';
+  static const String goToRegister = 'Crear una cuenta';
+
+  static const String registerTitle = 'Crear cuenta';
+  static const String registerSubtitle =
+      'Tu identidad pública será anónima. Solo usamos el correo para acceder.';
+  static const String registerButton = 'Crear cuenta';
+  static const String goToLogin = 'Ya tengo una cuenta';
+
+  static const String verifyTitle = 'Verifica tu correo';
+  static const String verifyBody =
+      'Te enviamos un enlace de confirmación. Ábrelo para activar tu cuenta.';
+  static const String verifyEmailSentTo = 'Correo enviado a';
+  static const String resendEmailButton = 'Reenviar correo';
+  static const String resendEmailSuccess =
+      'Correo de verificación reenviado correctamente.';
+  static const String backToLogin = 'Volver a iniciar sesión';
+
+  static const String signOutButton = 'Cerrar sesión';
+  static const String showPassword = 'Mostrar contraseña';
+  static const String hidePassword = 'Ocultar contraseña';
 }
