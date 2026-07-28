@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 
-/// Temporary main shell with the four primary destinations.
+/// Main shell with four primary destinations. State is preserved by
+/// [StatefulShellRoute.indexedStack] in the router.
 class MainShell extends StatelessWidget {
   const MainShell({super.key, required this.navigationShell});
 
@@ -14,11 +15,16 @@ class MainShell extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: navigationShell.goBranch,
+        onDestinationSelected: (index) {
+          navigationShell.goBranch(
+            index,
+            initialLocation: index == navigationShell.currentIndex,
+          );
+        },
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
-            selectedIcon: Icon(Icons.menu_book),
+            icon: Icon(Icons.explore_outlined),
+            selectedIcon: Icon(Icons.explore),
             label: AppStrings.exploreLabel,
           ),
           NavigationDestination(
@@ -27,7 +33,7 @@ class MainShell extends StatelessWidget {
             label: AppStrings.publishLabel,
           ),
           NavigationDestination(
-            icon: Icon(Icons.search_outlined),
+            icon: Icon(Icons.search),
             selectedIcon: Icon(Icons.search),
             label: AppStrings.searchLabel,
           ),

@@ -60,4 +60,46 @@ abstract final class AppStrings {
   static const String welcomeDescription =
       'En Lyrical, tu nombre real no importa. Aquí, tus palabras hablan por ti.';
   static const String welcomeEnterButton = 'Entrar a Lyrical';
+
+  static const String poemOfTheDay = 'Poema del día';
+  static const String discoverSomethingNew = 'Descubre algo nuevo';
+  static const String monthlySelection = 'Selección del mes';
+  static const String recentPublications = 'Publicaciones recientes';
+  static const String exploreGreetingPrefix = 'Hola,';
+  static const String notificationsTooltip = 'Notificaciones';
+
+  static const String poemTitleLabel = 'Título';
+  static const String poemTypeLabel = 'Tipo de poema';
+  static const String poemContentLabel = 'Tu poema';
+  static const String submitForReview = 'Enviar a revisión';
+  static const String publishPrototypeMessage =
+      'Esto es un prototipo visual. Todavía no se envía nada a Supabase.';
+  static const String discardDraftTitle = '¿Descartar borrador?';
+  static const String discardDraftBody =
+      'Tienes un borrador sin enviar. Si continúas, se perderá.';
+  static const String discardConfirm = 'Descartar';
+  static const String discardCancel = 'Seguir editando';
+  static const String titleRequired = 'El título es obligatorio.';
+  static const String typeRequired = 'Selecciona un tipo de poema.';
+  static const String contentRequired = 'El poema no puede estar vacío.';
+
+  static const String searchHint = 'Buscar por título, contenido o autor';
+  static const String searchAllTypes = 'Todos';
+  static const String searchEmptyTitle = 'Sin resultados';
+  static const String searchEmptyMessage =
+      'Prueba con otras palabras o cambia el tipo de poema.';
+  static const String clearSearchTooltip = 'Limpiar búsqueda';
+
+  static const String editProfile = 'Editar perfil';
+  static const String myPoems = 'Mis poemas';
+  static const String poemsInReview = 'En revisión';
+  static const String poemsPublished = 'Publicados';
+  static const String poemsHidden = 'Ocultos';
+  static const String settingsTooltip = 'Ajustes';
+  static const String mockCountersNote = 'Contadores de demostración';
+  static const String mockPublished = 'Publicados';
+  static const String mockFollowers = 'Seguidores';
+  static const String mockFollowing = 'Siguiendo';
+  static const String genderFemale = 'Mujer';
+  static const String genderMale = 'Hombre';
 }
