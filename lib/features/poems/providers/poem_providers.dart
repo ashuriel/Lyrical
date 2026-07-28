@@ -44,13 +44,35 @@ final currentUserRejectedPoemsProvider = FutureProvider<List<Poem>>((
   return ref.watch(poemRepositoryProvider).fetchCurrentUserRejectedPoems();
 });
 
-final currentUserPoemProvider = FutureProvider.family<Poem, String>((
-  ref,
-  poemId,
-) async {
-  await _requireAuthenticated(ref);
-  return ref.watch(poemRepositoryProvider).fetchCurrentUserPoemById(poemId);
-});
+/// Latest poem by id. Auto-dispose so reopening the detail route refetches.
+final currentUserPoemProvider = FutureProvider.autoDispose.family<Poem, String>(
+  (ref, poemId) async {
+    await _requireAuthenticated(ref);
+    return ref.watch(poemRepositoryProvider).fetchCurrentUserPoemById(poemId);
+  },
+);
+
+/// Invalidates all current-user poem list providers (no fetch).
+void invalidateCurrentUserPoemLists(Ref ref) {
+  ref.invalidate(currentUserPendingPoemsProvider);
+  ref.invalidate(currentUserPublishedPoemsProvider);
+  ref.invalidate(currentUserHiddenPoemsProvider);
+  ref.invalidate(currentUserRejectedPoemsProvider);
+}
+
+/// Pull-to-refresh / screen-open helper: invalidate then await all four lists.
+Future<void> refreshCurrentUserPoemLists(WidgetRef ref) async {
+  ref.invalidate(currentUserPendingPoemsProvider);
+  ref.invalidate(currentUserPublishedPoemsProvider);
+  ref.invalidate(currentUserHiddenPoemsProvider);
+  ref.invalidate(currentUserRejectedPoemsProvider);
+  await Future.wait([
+    ref.read(currentUserPendingPoemsProvider.future),
+    ref.read(currentUserPublishedPoemsProvider.future),
+    ref.read(currentUserHiddenPoemsProvider.future),
+    ref.read(currentUserRejectedPoemsProvider.future),
+  ]);
+}
 
 /// Session-local publish draft. Not auto-disposed so tab switches keep it.
 @immutable
@@ -182,7 +204,7 @@ class PublishPoemController extends AutoDisposeAsyncNotifier<void> {
               poetryTypeId: form.poetryTypeId!,
             );
         ref.read(publishFormProvider.notifier).clear();
-        ref.invalidate(currentUserPendingPoemsProvider);
+        invalidateCurrentUserPoemLists(ref);
       } catch (error) {
         throw AppException(PoemErrorMapper.map(error));
       }
@@ -199,8 +221,7 @@ class PoemActionController extends AutoDisposeAsyncNotifier<void> {
   Future<bool> hide(String poemId) async {
     return _run(() async {
       await ref.read(poemRepositoryProvider).hidePoem(poemId);
-      ref.invalidate(currentUserPublishedPoemsProvider);
-      ref.invalidate(currentUserHiddenPoemsProvider);
+      invalidateCurrentUserPoemLists(ref);
       ref.invalidate(currentUserPoemProvider(poemId));
     });
   }
@@ -208,8 +229,7 @@ class PoemActionController extends AutoDisposeAsyncNotifier<void> {
   Future<bool> unhide(String poemId) async {
     return _run(() async {
       await ref.read(poemRepositoryProvider).unhidePoem(poemId);
-      ref.invalidate(currentUserHiddenPoemsProvider);
-      ref.invalidate(currentUserPublishedPoemsProvider);
+      invalidateCurrentUserPoemLists(ref);
       ref.invalidate(currentUserPoemProvider(poemId));
     });
   }
@@ -217,10 +237,7 @@ class PoemActionController extends AutoDisposeAsyncNotifier<void> {
   Future<bool> softDelete(String poemId) async {
     return _run(() async {
       await ref.read(poemRepositoryProvider).softDeletePoem(poemId);
-      ref.invalidate(currentUserPendingPoemsProvider);
-      ref.invalidate(currentUserPublishedPoemsProvider);
-      ref.invalidate(currentUserHiddenPoemsProvider);
-      ref.invalidate(currentUserRejectedPoemsProvider);
+      invalidateCurrentUserPoemLists(ref);
       ref.invalidate(currentUserPoemProvider(poemId));
     });
   }

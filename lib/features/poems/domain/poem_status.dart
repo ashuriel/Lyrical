@@ -5,7 +5,7 @@ enum PoemStatus {
   rejected;
 
   static PoemStatus fromDb(String value) {
-    switch (value) {
+    switch (value.trim()) {
       case 'pending':
         return PoemStatus.pending;
       case 'approved':

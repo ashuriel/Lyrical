@@ -21,20 +21,46 @@ class MyPoemsScreen extends ConsumerStatefulWidget {
 }
 
 class _MyPoemsScreenState extends ConsumerState<MyPoemsScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final TabController _tabController;
+  var _didInitialRefresh = false;
 
   @override
   void initState() {
     super.initState();
     final index = widget.initialTabIndex.clamp(0, 3);
     _tabController = TabController(length: 4, vsync: this, initialIndex: index);
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _didInitialRefresh) return;
+      _didInitialRefresh = true;
+      _refreshAllLists();
+    });
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _tabController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      _refreshAllLists();
+    }
+  }
+
+  Future<void> _refreshAllLists() {
+    return refreshCurrentUserPoemLists(ref);
+  }
+
+  Future<void> _openPoem(Poem poem) async {
+    await context.push('/app/poems/${poem.id}');
+    if (!mounted) return;
+    // Moderation may have changed while the detail route was open.
+    await _refreshAllLists();
   }
 
   Future<bool> _confirm({required String title, required String body}) async {
@@ -173,14 +199,16 @@ class _MyPoemsScreenState extends ConsumerState<MyPoemsScreen>
             provider: currentUserPendingPoemsProvider,
             emptyMessage: AppStrings.emptyPendingPoems,
             actionsEnabled: !busy,
-            onView: (poem) => context.push('/app/poems/${poem.id}'),
+            onRefreshAll: _refreshAllLists,
+            onView: _openPoem,
             onDelete: _delete,
           ),
           _PoemListTab(
             provider: currentUserPublishedPoemsProvider,
             emptyMessage: AppStrings.emptyPublishedPoems,
             actionsEnabled: !busy,
-            onView: (poem) => context.push('/app/poems/${poem.id}'),
+            onRefreshAll: _refreshAllLists,
+            onView: _openPoem,
             onHide: _hide,
             onDelete: _delete,
           ),
@@ -188,7 +216,8 @@ class _MyPoemsScreenState extends ConsumerState<MyPoemsScreen>
             provider: currentUserHiddenPoemsProvider,
             emptyMessage: AppStrings.emptyHiddenPoems,
             actionsEnabled: !busy,
-            onView: (poem) => context.push('/app/poems/${poem.id}'),
+            onRefreshAll: _refreshAllLists,
+            onView: _openPoem,
             onUnhide: _unhide,
             onDelete: _delete,
           ),
@@ -196,7 +225,8 @@ class _MyPoemsScreenState extends ConsumerState<MyPoemsScreen>
             provider: currentUserRejectedPoemsProvider,
             emptyMessage: AppStrings.emptyRejectedPoems,
             actionsEnabled: !busy,
-            onView: (poem) => context.push('/app/poems/${poem.id}'),
+            onRefreshAll: _refreshAllLists,
+            onView: _openPoem,
             onDelete: _delete,
           ),
         ],
@@ -210,6 +240,7 @@ class _PoemListTab extends ConsumerWidget {
     required this.provider,
     required this.emptyMessage,
     required this.actionsEnabled,
+    required this.onRefreshAll,
     required this.onView,
     required this.onDelete,
     this.onHide,
@@ -219,7 +250,8 @@ class _PoemListTab extends ConsumerWidget {
   final FutureProvider<List<Poem>> provider;
   final String emptyMessage;
   final bool actionsEnabled;
-  final void Function(Poem poem) onView;
+  final Future<void> Function() onRefreshAll;
+  final Future<void> Function(Poem poem) onView;
   final void Function(Poem poem) onDelete;
   final void Function(Poem poem)? onHide;
   final void Function(Poem poem)? onUnhide;
@@ -232,45 +264,48 @@ class _PoemListTab extends ConsumerWidget {
       loading: () => const LoadingStateView(),
       error: (error, _) => ErrorStateView(
         message: PoemErrorMapper.map(error),
-        onRetry: () => ref.invalidate(provider),
+        onRetry: onRefreshAll,
       ),
       data: (poems) {
-        if (poems.isEmpty) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Text(
-                emptyMessage,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-          );
-        }
+        final listChild = poems.isEmpty
+            ? ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.4,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        child: Text(
+                          emptyMessage,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: poems.length,
+                separatorBuilder: (_, _) =>
+                    const SizedBox(height: AppSpacing.sm),
+                itemBuilder: (context, index) {
+                  final poem = poems[index];
+                  return MyPoemListTile(
+                    poem: poem,
+                    actionsEnabled: actionsEnabled,
+                    onView: () => onView(poem),
+                    onHide: onHide == null ? null : () => onHide!(poem),
+                    onUnhide: onUnhide == null ? null : () => onUnhide!(poem),
+                    onDelete: () => onDelete(poem),
+                  );
+                },
+              );
 
         return AppPage(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              ref.invalidate(provider);
-              await ref.read(provider.future);
-            },
-            child: ListView.separated(
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: poems.length,
-              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (context, index) {
-                final poem = poems[index];
-                return MyPoemListTile(
-                  poem: poem,
-                  actionsEnabled: actionsEnabled,
-                  onView: () => onView(poem),
-                  onHide: onHide == null ? null : () => onHide!(poem),
-                  onUnhide: onUnhide == null ? null : () => onUnhide!(poem),
-                  onDelete: () => onDelete(poem),
-                );
-              },
-            ),
-          ),
+          child: RefreshIndicator(onRefresh: onRefreshAll, child: listChild),
         );
       },
     );

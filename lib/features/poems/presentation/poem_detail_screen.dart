@@ -12,10 +12,35 @@ import 'package:lyrical/features/poems/domain/poem.dart';
 import 'package:lyrical/features/poems/domain/poem_status.dart';
 import 'package:lyrical/features/poems/providers/poem_providers.dart';
 
-class PoemDetailScreen extends ConsumerWidget {
+class PoemDetailScreen extends ConsumerStatefulWidget {
   const PoemDetailScreen({super.key, required this.poemId});
 
   final String poemId;
+
+  @override
+  ConsumerState<PoemDetailScreen> createState() => _PoemDetailScreenState();
+}
+
+class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      ref.invalidate(currentUserPoemProvider(widget.poemId));
+    }
+  }
 
   String _formatDate(DateTime date) {
     return '${date.day.toString().padLeft(2, '0')}/'
@@ -23,11 +48,7 @@ class PoemDetailScreen extends ConsumerWidget {
         '${date.year}';
   }
 
-  Future<bool> _confirm(
-    BuildContext context, {
-    required String title,
-    required String body,
-  }) async {
+  Future<bool> _confirm({required String title, required String body}) async {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -50,7 +71,7 @@ class PoemDetailScreen extends ConsumerWidget {
     return result ?? false;
   }
 
-  void _showActionError(BuildContext context, WidgetRef ref, String fallback) {
+  void _showActionError(String fallback) {
     final error = ref.read(poemActionControllerProvider).error;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -59,9 +80,8 @@ class PoemDetailScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _hide(BuildContext context, WidgetRef ref, Poem poem) async {
+  Future<void> _hide(Poem poem) async {
     final okConfirm = await _confirm(
-      context,
       title: AppStrings.hidePoemTitle,
       body: AppStrings.hidePoemBody,
     );
@@ -70,13 +90,9 @@ class PoemDetailScreen extends ConsumerWidget {
     final ok = await ref
         .read(poemActionControllerProvider.notifier)
         .hide(poem.id);
-    if (!context.mounted) return;
+    if (!mounted) return;
     if (!ok) {
-      _showActionError(
-        context,
-        ref,
-        'No se pudo ocultar el poema. Inténtalo de nuevo.',
-      );
+      _showActionError('No se pudo ocultar el poema. Inténtalo de nuevo.');
       return;
     }
     ScaffoldMessenger.of(
@@ -84,9 +100,8 @@ class PoemDetailScreen extends ConsumerWidget {
     ).showSnackBar(const SnackBar(content: Text(AppStrings.hidePoemSuccess)));
   }
 
-  Future<void> _unhide(BuildContext context, WidgetRef ref, Poem poem) async {
+  Future<void> _unhide(Poem poem) async {
     final okConfirm = await _confirm(
-      context,
       title: AppStrings.unhidePoemTitle,
       body: AppStrings.unhidePoemBody,
     );
@@ -95,13 +110,9 @@ class PoemDetailScreen extends ConsumerWidget {
     final ok = await ref
         .read(poemActionControllerProvider.notifier)
         .unhide(poem.id);
-    if (!context.mounted) return;
+    if (!mounted) return;
     if (!ok) {
-      _showActionError(
-        context,
-        ref,
-        'No se pudo mostrar el poema. Inténtalo de nuevo.',
-      );
+      _showActionError('No se pudo mostrar el poema. Inténtalo de nuevo.');
       return;
     }
     ScaffoldMessenger.of(
@@ -109,9 +120,8 @@ class PoemDetailScreen extends ConsumerWidget {
     ).showSnackBar(const SnackBar(content: Text(AppStrings.unhidePoemSuccess)));
   }
 
-  Future<void> _delete(BuildContext context, WidgetRef ref, Poem poem) async {
+  Future<void> _delete(Poem poem) async {
     final okConfirm = await _confirm(
-      context,
       title: AppStrings.deletePoemTitle,
       body: AppStrings.deletePoemBody,
     );
@@ -120,13 +130,9 @@ class PoemDetailScreen extends ConsumerWidget {
     final ok = await ref
         .read(poemActionControllerProvider.notifier)
         .softDelete(poem.id);
-    if (!context.mounted) return;
+    if (!mounted) return;
     if (!ok) {
-      _showActionError(
-        context,
-        ref,
-        'No se pudo eliminar el poema. Inténtalo de nuevo.',
-      );
+      _showActionError('No se pudo eliminar el poema. Inténtalo de nuevo.');
       return;
     }
     ScaffoldMessenger.of(
@@ -136,91 +142,102 @@ class PoemDetailScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final poemAsync = ref.watch(currentUserPoemProvider(poemId));
+  Widget build(BuildContext context) {
+    final poemAsync = ref.watch(currentUserPoemProvider(widget.poemId));
     final actionState = ref.watch(poemActionControllerProvider);
     final busy = actionState.isLoading;
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.poemDetailTitle)),
+      appBar: AppBar(
+        title: const Text(AppStrings.poemDetailTitle),
+        actions: [
+          IconButton(
+            tooltip: AppStrings.retryButton,
+            onPressed: () =>
+                ref.invalidate(currentUserPoemProvider(widget.poemId)),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
       body: poemAsync.when(
         loading: () => const LoadingStateView(),
         error: (error, _) => ErrorStateView(
           message: PoemErrorMapper.map(error),
-          onRetry: () => ref.invalidate(currentUserPoemProvider(poemId)),
+          onRetry: () => ref.invalidate(currentUserPoemProvider(widget.poemId)),
         ),
         data: (poem) {
           return AppPage(
-            child: ListView(
-              children: [
-                Text(poem.title, style: theme.textTheme.headlineSmall),
-                const SizedBox(height: AppSpacing.md),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    PoetryTypeBadge(label: poem.poetryTypeName),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(_statusIcon(poem), size: 18),
-                        const SizedBox(width: AppSpacing.xs),
-                        Text(
-                          '${AppStrings.statusLabel}: ${poem.displayStatusLabel}',
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  '${AppStrings.createdAtLabel}: ${_formatDate(poem.createdAt)}',
-                  style: theme.textTheme.bodySmall,
-                ),
-                if (poem.publishedAt != null) ...[
-                  const SizedBox(height: AppSpacing.xs),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(currentUserPoemProvider(widget.poemId));
+                await ref.read(currentUserPoemProvider(widget.poemId).future);
+              },
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  Text(poem.title, style: theme.textTheme.headlineSmall),
+                  const SizedBox(height: AppSpacing.md),
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      PoetryTypeBadge(label: poem.poetryTypeName),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(_statusIcon(poem), size: 18),
+                          const SizedBox(width: AppSpacing.xs),
+                          Text(
+                            '${AppStrings.statusLabel}: ${poem.displayStatusLabel}',
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
                   Text(
-                    '${AppStrings.publishedAtLabel}: ${_formatDate(poem.publishedAt!)}',
+                    '${AppStrings.createdAtLabel}: ${_formatDate(poem.createdAt)}',
                     style: theme.textTheme.bodySmall,
                   ),
-                ],
-                const SizedBox(height: AppSpacing.xl),
-                SelectableText(
-                  poem.content,
-                  style: theme.textTheme.bodyLarge?.copyWith(height: 1.7),
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: [
-                    if (poem.status == PoemStatus.approved && !poem.isHidden)
-                      FilledButton.tonal(
-                        onPressed: busy
-                            ? null
-                            : () => _hide(context, ref, poem),
-                        child: const Text(AppStrings.hidePoem),
-                      ),
-                    if (poem.status == PoemStatus.approved && poem.isHidden)
-                      FilledButton.tonal(
-                        onPressed: busy
-                            ? null
-                            : () => _unhide(context, ref, poem),
-                        child: const Text(AppStrings.unhidePoem),
-                      ),
-                    OutlinedButton(
-                      onPressed: busy
-                          ? null
-                          : () => _delete(context, ref, poem),
-                      child: const Text(AppStrings.deletePoem),
+                  if (poem.publishedAt != null) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      '${AppStrings.publishedAtLabel}: ${_formatDate(poem.publishedAt!)}',
+                      style: theme.textTheme.bodySmall,
                     ),
                   ],
-                ),
-                const SizedBox(height: AppSpacing.lg),
-              ],
+                  const SizedBox(height: AppSpacing.xl),
+                  SelectableText(
+                    poem.content,
+                    style: theme.textTheme.bodyLarge?.copyWith(height: 1.7),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: [
+                      if (poem.status == PoemStatus.approved && !poem.isHidden)
+                        FilledButton.tonal(
+                          onPressed: busy ? null : () => _hide(poem),
+                          child: const Text(AppStrings.hidePoem),
+                        ),
+                      if (poem.status == PoemStatus.approved && poem.isHidden)
+                        FilledButton.tonal(
+                          onPressed: busy ? null : () => _unhide(poem),
+                          child: const Text(AppStrings.unhidePoem),
+                        ),
+                      OutlinedButton(
+                        onPressed: busy ? null : () => _delete(poem),
+                        child: const Text(AppStrings.deletePoem),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                ],
+              ),
             ),
           );
         },
