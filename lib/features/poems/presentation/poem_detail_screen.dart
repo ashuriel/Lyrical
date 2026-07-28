@@ -9,6 +9,7 @@ import 'package:lyrical/core/widgets/app_page.dart';
 import 'package:lyrical/core/widgets/error_state_view.dart';
 import 'package:lyrical/core/widgets/loading_state_view.dart';
 import 'package:lyrical/core/widgets/poetry_type_badge.dart';
+import 'package:lyrical/features/engagement/presentation/widgets/poem_engagement_bar.dart';
 import 'package:lyrical/features/explore/providers/explore_providers.dart';
 import 'package:lyrical/features/poems/domain/poem_status.dart';
 import 'package:lyrical/features/poems/providers/poem_providers.dart';
@@ -231,6 +232,12 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                       style: theme.textTheme.bodySmall,
                     ),
                   ],
+                  PoemEngagementBar(
+                    poemId: poem.id,
+                    isOwner: poem.isOwner,
+                    isPubliclyVisible:
+                        poem.status == PoemStatus.approved && !poem.isHidden,
+                  ),
                   const SizedBox(height: AppSpacing.xl),
                   SelectableText(
                     poem.content,

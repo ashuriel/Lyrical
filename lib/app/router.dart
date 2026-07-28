@@ -8,6 +8,7 @@ import 'package:lyrical/features/auth/presentation/login_screen.dart';
 import 'package:lyrical/features/auth/presentation/register_screen.dart';
 import 'package:lyrical/features/auth/presentation/verify_email_screen.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
+import 'package:lyrical/features/engagement/presentation/saved_poems_screen.dart';
 import 'package:lyrical/features/explore/presentation/explore_screen.dart';
 import 'package:lyrical/features/poems/presentation/my_poems_screen.dart';
 import 'package:lyrical/features/poems/presentation/poem_detail_screen.dart';
@@ -185,6 +186,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                           0;
                       return MyPoemsScreen(initialTabIndex: tab);
                     },
+                  ),
+                  GoRoute(
+                    path: 'saved-poems',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => const SavedPoemsScreen(),
                   ),
                 ],
               ),

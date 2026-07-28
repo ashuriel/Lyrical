@@ -174,4 +174,27 @@ abstract final class AppStrings {
       'No hay poemas en esta sección todavía.';
   static const String loadMorePoems = 'Cargar más';
   static const String poemUnavailable = 'Este poema ya no está disponible.';
+
+  static const String likePoemSemantic = 'Me gusta';
+  static const String unlikePoemSemantic = 'Quitar Me gusta';
+  static const String bookmarkPoemSemantic = 'Guardar poema';
+  static const String removeBookmarkSemantic = 'Quitar de guardados';
+  static const String likePoemError = 'No pudimos registrar tu Me gusta.';
+  static const String unlikePoemError = 'No pudimos quitar tu Me gusta.';
+  static const String bookmarkPoemError = 'No pudimos guardar este poema.';
+  static const String removeBookmarkError =
+      'No pudimos quitar este poema de guardados.';
+
+  static const String myLibraryTitle = 'Mi biblioteca';
+  static const String savedPoemsMenu = 'Guardados';
+  static const String savedPoemsTitle = 'Guardados';
+  static const String savedPoemsEmptyTitle = 'Sin guardados';
+  static const String savedPoemsEmptyMessage =
+      'Aún no has guardado ningún poema.';
+  static const String removeBookmarkAction = 'Quitar de guardados';
+  static const String removeBookmarkTitle = '¿Quitar de guardados?';
+  static const String removeBookmarkBody =
+      'El poema dejará de aparecer en tu biblioteca.';
+  static const String removeBookmarkConfirm = 'Quitar';
+  static const String removeBookmarkSuccess = 'Poema quitado de guardados.';
 }

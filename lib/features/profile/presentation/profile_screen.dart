@@ -191,6 +191,17 @@ class _ProfileBody extends StatelessWidget {
             onTap: () => context.push('/app/profile/my-poems?tab=3'),
           ),
           const SizedBox(height: AppSpacing.xl),
+          Text(AppStrings.myLibraryTitle, style: theme.textTheme.titleLarge),
+          const SizedBox(height: AppSpacing.md),
+          ProfileMenuTile(
+            title: AppStrings.savedPoemsMenu,
+            leading: Icon(
+              Icons.bookmark_outline,
+              color: scheme.onSurfaceVariant,
+            ),
+            onTap: () => context.push('/app/profile/saved-poems'),
+          ),
+          const SizedBox(height: AppSpacing.xl),
           if (signOutError != null) ...[
             Text(
               signOutError!,

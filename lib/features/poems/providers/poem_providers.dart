@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lyrical/core/errors/app_exception.dart';
 import 'package:lyrical/core/errors/poem_error_mapper.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
+import 'package:lyrical/features/engagement/providers/engagement_providers.dart';
 import 'package:lyrical/features/explore/providers/explore_providers.dart';
 import 'package:lyrical/features/poems/data/poem_repository.dart';
 import 'package:lyrical/features/poems/data/poetry_type_repository.dart';
@@ -224,6 +225,8 @@ class PoemActionController extends AutoDisposeAsyncNotifier<void> {
       await ref.read(poemRepositoryProvider).hidePoem(poemId);
       invalidateCurrentUserPoemLists(ref);
       ref.invalidate(currentUserPoemProvider(poemId));
+      ref.invalidate(poemDetailProvider(poemId));
+      ref.invalidate(savedPoemsProvider);
     });
   }
 
@@ -232,6 +235,8 @@ class PoemActionController extends AutoDisposeAsyncNotifier<void> {
       await ref.read(poemRepositoryProvider).unhidePoem(poemId);
       invalidateCurrentUserPoemLists(ref);
       ref.invalidate(currentUserPoemProvider(poemId));
+      ref.invalidate(poemDetailProvider(poemId));
+      ref.invalidate(savedPoemsProvider);
     });
   }
 
@@ -245,6 +250,7 @@ class PoemActionController extends AutoDisposeAsyncNotifier<void> {
       ref.invalidate(discoveryPoemsProvider);
       ref.invalidate(monthlySelectionProvider);
       ref.invalidate(recentPoemsProvider);
+      ref.invalidate(savedPoemsProvider);
     });
   }
 
