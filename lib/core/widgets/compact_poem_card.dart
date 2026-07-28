@@ -34,10 +34,6 @@ class CompactPoemCard extends StatelessWidget {
         child: Container(
           width: compact ? 240 : double.infinity,
           padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-            border: Border.all(color: scheme.outline),
-          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

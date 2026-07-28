@@ -17,7 +17,7 @@ class LyricalApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       locale: const Locale('es'),
       supportedLocales: const [Locale('es'), Locale('en')],
       localizationsDelegates: const [

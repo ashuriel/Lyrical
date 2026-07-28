@@ -36,7 +36,7 @@ class ProfileMenuTile extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-            border: Border.all(color: scheme.outline.withValues(alpha: 0.85)),
+            border: Border.all(color: scheme.outline, width: 1.1),
           ),
           child: Row(
             children: [

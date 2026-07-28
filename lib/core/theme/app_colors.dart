@@ -15,8 +15,10 @@ abstract final class AppColors {
   static const Color lightText = Color(0xFF1D2722);
   static const Color lightSecondaryText = Color(0xFF667069);
   static const Color lightSubtleText = Color(0xFF7D857F);
-  static const Color lightBorder = Color(0xFFD8CFC0);
-  static const Color lightDivider = Color(0xFFE1D9CC);
+
+  /// Ink-green edges and lines (not beige).
+  static const Color lightBorder = Color(0xFF35594B);
+  static const Color lightDivider = Color(0xFF6F8578);
   static const Color lightError = Color(0xFF8B3A3A);
   static const Color lightOnPrimary = Color(0xFFFAF7F0);
   static const Color lightSuccess = Color(0xFF35594B);

@@ -172,6 +172,7 @@ abstract final class AppTheme {
 
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      side: BorderSide(color: border, width: 1.1),
     );
 
     final buttonShape = RoundedRectangleBorder(

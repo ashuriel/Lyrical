@@ -28,11 +28,6 @@ class FeaturedPoemCard extends StatelessWidget {
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(AppSpacing.lg),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-            border: Border.all(color: scheme.outline),
-            color: scheme.surfaceContainerLow.withValues(alpha: 0.55),
-          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
