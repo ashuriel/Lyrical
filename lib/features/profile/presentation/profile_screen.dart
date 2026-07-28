@@ -9,6 +9,7 @@ import 'package:lyrical/core/widgets/error_state_view.dart';
 import 'package:lyrical/core/widgets/loading_state_view.dart';
 import 'package:lyrical/core/widgets/profile_menu_tile.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
+import 'package:lyrical/features/moderation/providers/moderation_providers.dart';
 import 'package:lyrical/features/profile/domain/profile.dart';
 import 'package:lyrical/features/profile/providers/profile_providers.dart';
 import 'package:lyrical/features/public_profile/providers/public_profile_providers.dart';
@@ -68,6 +69,31 @@ class _ProfileBody extends ConsumerWidget {
   final bool isSigningOut;
   final String? signOutError;
   final VoidCallback onSignOut;
+
+  List<Widget> _adminModerationSection(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeData theme,
+    ColorScheme scheme,
+  ) {
+    final adminAsync = ref.watch(isCurrentUserAdminProvider);
+    final isAdmin = adminAsync.asData?.value == true;
+    if (!isAdmin) return const [];
+
+    return [
+      const SizedBox(height: AppSpacing.xl),
+      Text(AppStrings.moderationMenu, style: theme.textTheme.titleLarge),
+      const SizedBox(height: AppSpacing.md),
+      ProfileMenuTile(
+        title: AppStrings.moderationMenu,
+        leading: Icon(
+          Icons.fact_check_outlined,
+          color: scheme.onSurfaceVariant,
+        ),
+        onTap: () => context.push('/app/admin/moderation'),
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -205,6 +231,7 @@ class _ProfileBody extends ConsumerWidget {
             ),
             onTap: () => context.push('/app/profile/saved-poems'),
           ),
+          ..._adminModerationSection(context, ref, theme, scheme),
           const SizedBox(height: AppSpacing.xl),
           if (signOutError != null) ...[
             Text(

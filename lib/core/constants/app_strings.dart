@@ -77,6 +77,7 @@ abstract final class AppStrings {
       'Tienes un borrador sin enviar. Si continúas, se perderá.';
   static const String discardConfirm = 'Descartar';
   static const String discardCancel = 'Seguir editando';
+  static const String dialogCancel = 'Cancelar';
   static const String titleRequired = 'El título es obligatorio.';
   static const String typeRequired = 'Selecciona un tipo de poema.';
   static const String contentRequired = 'El poema no puede estar vacío.';
@@ -255,4 +256,32 @@ abstract final class AppStrings {
     if (count == 1) return '1 notificación sin leer';
     return '$count notificaciones sin leer';
   }
+
+  static const String moderationMenu = 'Moderación';
+  static const String moderationTitle = 'Moderación';
+  static const String moderationReviewTitle = 'Revisar poema';
+  static const String moderationReviewAction = 'Revisar';
+  static const String moderationEmptyTitle = 'Cola vacía';
+  static const String moderationEmptyMessage =
+      'No hay poemas pendientes de revisión.';
+  static const String moderationListError =
+      'No pudimos cargar la cola de moderación.';
+  static const String moderationDetailError =
+      'No pudimos cargar este poema para revisión.';
+  static const String moderationUnauthorized =
+      'No tienes permiso para acceder a esta sección.';
+  static const String moderationIrreversibleWarning =
+      'Esta decisión no se puede deshacer fácilmente desde la aplicación.';
+  static const String moderationApproveTitle = 'Aprobar poema';
+  static const String moderationApproveBody =
+      '¿Aprobar este poema? Se publicará en Lyrical.';
+  static const String moderationApproveAction = 'Aprobar';
+  static const String moderationApproveSuccess = 'Poema aprobado.';
+  static const String moderationApproveError = 'No pudimos aprobar este poema.';
+  static const String moderationRejectTitle = 'Rechazar poema';
+  static const String moderationRejectBody =
+      '¿Rechazar este poema? El autor podrá ver el resultado en Mis poemas.';
+  static const String moderationRejectAction = 'Rechazar';
+  static const String moderationRejectSuccess = 'Poema rechazado.';
+  static const String moderationRejectError = 'No pudimos rechazar este poema.';
 }

@@ -14,6 +14,8 @@ import 'package:lyrical/features/engagement/presentation/saved_poems_screen.dart
 import 'package:lyrical/features/explore/presentation/explore_screen.dart';
 import 'package:lyrical/features/poems/presentation/my_poems_screen.dart';
 import 'package:lyrical/features/poems/presentation/poem_detail_screen.dart';
+import 'package:lyrical/features/moderation/presentation/moderation_detail_screen.dart';
+import 'package:lyrical/features/moderation/presentation/moderation_list_screen.dart';
 import 'package:lyrical/features/notifications/presentation/notifications_screen.dart';
 import 'package:lyrical/features/profile/presentation/edit_profile_screen.dart';
 import 'package:lyrical/features/profile/presentation/entry_screen.dart';
@@ -29,6 +31,8 @@ abstract final class AppRouteNames {
   static const String publicProfile = 'public-profile';
   static const String profile = 'profile';
   static const String notifications = 'notifications';
+  static const String moderation = 'moderation';
+  static const String moderationDetail = 'moderation-detail';
 }
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -199,6 +203,30 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             path: 'notifications',
             parentNavigatorKey: _rootNavigatorKey,
             builder: (context, state) => const NotificationsScreen(),
+          ),
+          GoRoute(
+            name: AppRouteNames.moderation,
+            path: 'admin/moderation',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) => const ModerationListScreen(),
+            routes: [
+              GoRoute(
+                name: AppRouteNames.moderationDetail,
+                path: ':poemId',
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) {
+                  final poemId = state.pathParameters['poemId']?.trim() ?? '';
+                  if (poemId.isEmpty) {
+                    return const Scaffold(
+                      body: ErrorStateView(
+                        message: AppStrings.moderationDetailError,
+                      ),
+                    );
+                  }
+                  return ModerationDetailScreen(poemId: poemId);
+                },
+              ),
+            ],
           ),
         ],
       ),
