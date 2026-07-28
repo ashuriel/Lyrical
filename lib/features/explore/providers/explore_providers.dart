@@ -24,7 +24,7 @@ final discoveryPoemsProvider = FutureProvider.autoDispose<List<PublicPoem>>((
   return ref.watch(publicPoemRepositoryProvider).fetchDiscoveryPoems();
 });
 
-final monthlySelectionProvider = FutureProvider.autoDispose<List<PublicPoem>>((
+final monthlySelectionProvider = FutureProvider.autoDispose<PublicPoem?>((
   ref,
 ) async {
   return ref.watch(publicPoemRepositoryProvider).fetchMonthlySelection();
@@ -216,4 +216,16 @@ Future<void> refreshExplorerProviders(WidgetRef ref) async {
     ref.read(discoveryPoemsProvider.future),
     ref.read(monthlySelectionProvider.future),
   ]);
+}
+
+/// Same Explorer invalidation for Riverpod [Ref] (e.g. after moderation).
+Future<void> invalidateExplorerAfterPublication(Ref ref) async {
+  ref.invalidate(poemOfTheDayProvider);
+  ref.invalidate(discoveryPoemsProvider);
+  ref.invalidate(monthlySelectionProvider);
+  try {
+    await ref.read(recentPoemsProvider.notifier).refresh();
+  } catch (_) {
+    // Best-effort.
+  }
 }

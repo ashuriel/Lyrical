@@ -15,6 +15,8 @@ class PublicPoem {
     required this.publishedAt,
     required this.createdAt,
     this.authorAvatarUrl,
+    this.periodLikeCount,
+    this.totalLikeCount,
   });
 
   final String id;
@@ -27,6 +29,12 @@ class PublicPoem {
   final String poetryTypeName;
   final DateTime publishedAt;
   final DateTime createdAt;
+
+  /// Likes received in the daily/monthly selection window (RPC only).
+  final int? periodLikeCount;
+
+  /// Lifetime like count when returned by featured RPCs.
+  final int? totalLikeCount;
 
   String get preview {
     final trimmed = content.trim();
@@ -120,9 +128,9 @@ class PublicPoem {
     );
   }
 
-  /// Flat row from [search_public_poems] RPC (no nested embeds).
+  /// Flat row from [search_public_poems] or featured selection RPCs.
   factory PublicPoem.fromSearchRpc(Map<String, dynamic> json) {
-    final id = json['poem_id'];
+    final id = json['poem_id'] ?? json['id'];
     final title = json['title'];
     final content = json['content'];
     final authorId = json['author_id'];
@@ -158,12 +166,12 @@ class PublicPoem {
     if (poetryTypeName is! String || poetryTypeName.isEmpty) {
       throw const FormatException('PublicPoem.poetry_type_name is missing.');
     }
-    if (createdAt is! String) {
+    if (createdAt is! String && createdAt is! DateTime) {
       throw const FormatException(
         'PublicPoem.created_at is missing or invalid.',
       );
     }
-    if (publishedAtRaw is! String || publishedAtRaw.isEmpty) {
+    if (publishedAtRaw is! String && publishedAtRaw is! DateTime) {
       throw const FormatException(
         'PublicPoem.published_at is required for public poems.',
       );
@@ -178,9 +186,25 @@ class PublicPoem {
       authorAvatarUrl: avatarUrl as String?,
       poetryTypeId: poetryTypeId,
       poetryTypeName: poetryTypeName,
-      publishedAt: DateTime.parse(publishedAtRaw),
-      createdAt: DateTime.parse(createdAt),
+      publishedAt: publishedAtRaw is DateTime
+          ? publishedAtRaw
+          : DateTime.parse(publishedAtRaw as String),
+      createdAt: createdAt is DateTime
+          ? createdAt
+          : DateTime.parse(createdAt as String),
+      periodLikeCount: _parseOptionalCount(json['period_like_count']),
+      totalLikeCount: _parseOptionalCount(json['total_like_count']),
     );
+  }
+
+  static int? _parseOptionalCount(Object? raw) {
+    return switch (raw) {
+      null => null,
+      final int value => value,
+      final num value => value.toInt(),
+      final String value when int.tryParse(value) != null => int.parse(value),
+      _ => null,
+    };
   }
 
   static int _parsePoetryTypeId(Object? raw) {

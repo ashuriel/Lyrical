@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lyrical/core/errors/app_exception.dart';
 import 'package:lyrical/core/errors/poem_error_mapper.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
+import 'package:lyrical/features/explore/providers/explore_providers.dart';
 import 'package:lyrical/features/engagement/data/engagement_repository.dart';
 import 'package:lyrical/features/engagement/domain/poem_engagement.dart';
 import 'package:lyrical/features/explore/domain/public_poem.dart';
@@ -59,6 +60,9 @@ class PoemEngagementNotifier
           isBookmarked: previous.isBookmarked,
         ),
       );
+      // Period rankings may change after likes.
+      ref.invalidate(poemOfTheDayProvider);
+      ref.invalidate(monthlySelectionProvider);
     } catch (error, stack) {
       state = AsyncData(previous);
       Error.throwWithStackTrace(

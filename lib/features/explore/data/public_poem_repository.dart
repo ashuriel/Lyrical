@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:lyrical/core/errors/app_exception.dart';
 import 'package:lyrical/core/errors/poem_error_mapper.dart';
 import 'package:lyrical/features/explore/domain/public_poem.dart';
@@ -5,7 +7,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Public (approved, visible) poem queries for Explorer.
 ///
-/// Always filters status/is_hidden/deleted_at even though RLS also enforces this.
+/// Canonical visibility (also enforced by RLS / RPCs):
+/// status=approved, is_hidden=false, deleted_at null, published_at not null.
 class PublicPoemRepository {
   PublicPoemRepository(this._client);
 
@@ -14,8 +17,6 @@ class PublicPoemRepository {
   static const int defaultRecentPageSize = 10;
   static const int discoveryFetchSize = 30;
   static const int discoveryReturnSize = 8;
-  static const int monthlyLimit = 5;
-  static const int poemOfTheDayCandidateLimit = 50;
 
   static const String _selectColumns = '''
 id,
@@ -94,74 +95,36 @@ profiles!poems_author_id_fkey ( anonymous_name, avatar_url )
     }
   }
 
-  /// Temporary poem-of-the-day until featured_poems administration exists.
-  ///
-  /// Deterministic for a given UTC calendar day: picks index
-  /// `dayOfYear % candidateCount` from recent public poems ordered by
-  /// published_at descending.
-  Future<PublicPoem?> fetchPoemOfTheDay({DateTime? now}) async {
+  /// Most-liked public poem during the current America/Santo_Domingo day.
+  Future<PublicPoem?> fetchPoemOfTheDay() async {
     try {
-      final rows = await _client
-          .from('poems')
-          .select(_selectColumns)
-          .eq('status', 'approved')
-          .eq('is_hidden', false)
-          .isFilter('deleted_at', null)
-          .not('published_at', 'is', null)
-          .order('published_at', ascending: false)
-          .limit(poemOfTheDayCandidateLimit);
-
-      final poems = _mapRows(rows);
-      if (poems.isEmpty) return null;
-
-      final date = now?.toUtc() ?? DateTime.now().toUtc();
-      final dayOfYear = date.difference(DateTime.utc(date.year)).inDays;
-      final index = dayOfYear % poems.length;
-      return poems[index];
+      final raw = await _client.rpc('get_daily_featured_poem');
+      if (raw == null) return null;
+      final map = _asJsonMap(raw);
+      return PublicPoem.fromSearchRpc(map);
     } on AppException {
       rethrow;
     } on FormatException {
       throw const AppException(
-        'No pudimos leer los poemas. Inténtalo de nuevo.',
+        'No pudimos leer el poema del día. Inténtalo de nuevo.',
       );
     } catch (error) {
       throw AppException(_mapExploreError(error));
     }
   }
 
-  /// Temporary monthly selection until featured_poems administration exists.
-  ///
-  /// Prefers poems published in the current UTC month; falls back to recent
-  /// public poems when the month has no rows.
-  Future<List<PublicPoem>> fetchMonthlySelection({
-    int limit = monthlyLimit,
-    DateTime? now,
-  }) async {
+  /// Most-liked public poem during the current America/Santo_Domingo month.
+  Future<PublicPoem?> fetchMonthlySelection() async {
     try {
-      final date = now?.toUtc() ?? DateTime.now().toUtc();
-      final monthStart = DateTime.utc(date.year, date.month, 1);
-
-      final monthRows = await _client
-          .from('poems')
-          .select(_selectColumns)
-          .eq('status', 'approved')
-          .eq('is_hidden', false)
-          .isFilter('deleted_at', null)
-          .not('published_at', 'is', null)
-          .gte('published_at', monthStart.toIso8601String())
-          .order('published_at', ascending: false)
-          .limit(limit);
-
-      final monthPoems = _mapRows(monthRows);
-      if (monthPoems.isEmpty) {
-        return fetchRecentPoems(limit: limit, offset: 0);
-      }
-      return monthPoems;
+      final raw = await _client.rpc('get_monthly_featured_poem');
+      if (raw == null) return null;
+      final map = _asJsonMap(raw);
+      return PublicPoem.fromSearchRpc(map);
     } on AppException {
       rethrow;
     } on FormatException {
       throw const AppException(
-        'No pudimos leer los poemas. Inténtalo de nuevo.',
+        'No pudimos leer la selección del mes. Inténtalo de nuevo.',
       );
     } catch (error) {
       throw AppException(_mapExploreError(error));
@@ -194,6 +157,26 @@ profiles!poems_author_id_fkey ( anonymous_name, avatar_url )
     }
   }
 
+  Map<String, dynamic> _asJsonMap(dynamic raw) {
+    if (raw == null) {
+      throw const FormatException('Featured RPC returned null.');
+    }
+    if (raw is String) {
+      return _asJsonMap(jsonDecode(raw));
+    }
+    if (raw is Map<String, dynamic>) return raw;
+    if (raw is Map) return Map<String, dynamic>.from(raw);
+    if (raw is List) {
+      if (raw.isEmpty) {
+        throw const FormatException('Featured RPC returned an empty list.');
+      }
+      return _asJsonMap(raw.first);
+    }
+    throw FormatException(
+      'Featured RPC returned unsupported type: ${raw.runtimeType}',
+    );
+  }
+
   List<PublicPoem> _mapRows(List<dynamic> rows) {
     return rows
         .map(
@@ -203,6 +186,13 @@ profiles!poems_author_id_fkey ( anonymous_name, avatar_url )
   }
 
   String _mapExploreError(Object error) {
+    if (error is PostgrestException) {
+      final combined = '${error.message} ${error.details}'.toLowerCase();
+      if (error.code == 'PGRST202' ||
+          combined.contains('could not find the function')) {
+        return 'Esta función aún no está configurada.';
+      }
+    }
     final mapped = PoemErrorMapper.map(error);
     if (mapped == 'Ocurrió un error inesperado. Inténtalo de nuevo.' ||
         mapped == 'No se pudo completar la operación. Inténtalo de nuevo.') {

@@ -182,14 +182,7 @@ class ModerationActionController extends AutoDisposeAsyncNotifier<void> {
     }
 
     if (approved) {
-      ref.invalidate(poemOfTheDayProvider);
-      ref.invalidate(discoveryPoemsProvider);
-      ref.invalidate(monthlySelectionProvider);
-      try {
-        await ref.read(recentPoemsProvider.notifier).refresh();
-      } catch (_) {
-        // Best-effort Explorer refresh.
-      }
+      await invalidateExplorerAfterPublication(ref);
       try {
         final search = ref.read(poemSearchProvider);
         if (search.hasActiveCriteria) {

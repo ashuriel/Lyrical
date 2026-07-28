@@ -167,7 +167,25 @@ class ExploreScreen extends ConsumerWidget {
               const ContainedSliver(
                 child: AppSectionHeader(title: AppStrings.monthlySelection),
               ),
-              ..._monthlySlivers(context, ref, monthlyAsync),
+              ContainedSliver(
+                child: _AsyncSection<PublicPoem?>(
+                  async: monthlyAsync,
+                  onRetry: () => ref.invalidate(monthlySelectionProvider),
+                  builder: (poem) {
+                    if (poem == null) {
+                      return const _SectionMessage(
+                        AppStrings.exploreEmptySection,
+                      );
+                    }
+                    return CompactPoemCard(
+                      poem: poem.toCardViewData(),
+                      onTap: () => _openPoem(context, poem.id),
+                      onAuthorTap: () =>
+                          openAuthorProfile(context, ref, poem.authorId),
+                    );
+                  },
+                ),
+              ),
               const ContainedSliver(child: SizedBox(height: AppSpacing.xl)),
               const ContainedSliver(
                 child: AppSectionHeader(title: AppStrings.recentPublications),
@@ -178,50 +196,6 @@ class ExploreScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-
-  List<Widget> _monthlySlivers(
-    BuildContext context,
-    WidgetRef ref,
-    AsyncValue<List<PublicPoem>> monthlyAsync,
-  ) {
-    return monthlyAsync.when(
-      loading: () => [const ContainedSliver(child: _SectionLoading())],
-      error: (error, _) => [
-        ContainedSliver(
-          child: _SectionError(
-            message: PoemErrorMapper.map(error),
-            onRetry: () => ref.invalidate(monthlySelectionProvider),
-          ),
-        ),
-      ],
-      data: (poems) {
-        if (poems.isEmpty) {
-          return [
-            const ContainedSliver(
-              child: _SectionMessage(AppStrings.exploreEmptySection),
-            ),
-          ];
-        }
-        return [
-          ContainedSliver(
-            child: Column(
-              children: [
-                for (var i = 0; i < poems.length; i++) ...[
-                  if (i > 0) const SizedBox(height: AppSpacing.md),
-                  CompactPoemCard(
-                    poem: poems[i].toCardViewData(),
-                    onTap: () => _openPoem(context, poems[i].id),
-                    onAuthorTap: () =>
-                        openAuthorProfile(context, ref, poems[i].authorId),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ];
-      },
     );
   }
 
