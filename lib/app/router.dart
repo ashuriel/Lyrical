@@ -9,6 +9,8 @@ import 'package:lyrical/features/auth/presentation/register_screen.dart';
 import 'package:lyrical/features/auth/presentation/verify_email_screen.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
 import 'package:lyrical/features/explore/presentation/explore_screen.dart';
+import 'package:lyrical/features/poems/presentation/my_poems_screen.dart';
+import 'package:lyrical/features/poems/presentation/poem_detail_screen.dart';
 import 'package:lyrical/features/profile/presentation/edit_profile_screen.dart';
 import 'package:lyrical/features/profile/presentation/entry_screen.dart';
 import 'package:lyrical/features/profile/presentation/profile_screen.dart';
@@ -124,6 +126,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const WelcomeScreen(),
       ),
       GoRoute(path: '/app', redirect: (context, state) => '/app/explore'),
+      GoRoute(
+        path: '/app/poems/:poemId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final poemId = state.pathParameters['poemId']!;
+          return PoemDetailScreen(poemId: poemId);
+        },
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainShell(navigationShell: navigationShell);
@@ -163,6 +173,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                     path: 'edit',
                     parentNavigatorKey: _rootNavigatorKey,
                     builder: (context, state) => const EditProfileScreen(),
+                  ),
+                  GoRoute(
+                    path: 'my-poems',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      final tab =
+                          int.tryParse(
+                            state.uri.queryParameters['tab'] ?? '',
+                          ) ??
+                          0;
+                      return MyPoemsScreen(initialTabIndex: tab);
+                    },
                   ),
                 ],
               ),

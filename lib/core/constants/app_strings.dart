@@ -72,8 +72,6 @@ abstract final class AppStrings {
   static const String poemTypeLabel = 'Tipo de poema';
   static const String poemContentLabel = 'Tu poema';
   static const String submitForReview = 'Enviar a revisión';
-  static const String publishPrototypeMessage =
-      'Esto es un prototipo visual. Todavía no se envía nada a Supabase.';
   static const String discardDraftTitle = '¿Descartar borrador?';
   static const String discardDraftBody =
       'Tienes un borrador sin enviar. Si continúas, se perderá.';
@@ -95,6 +93,7 @@ abstract final class AppStrings {
   static const String poemsInReview = 'En revisión';
   static const String poemsPublished = 'Publicados';
   static const String poemsHidden = 'Ocultos';
+  static const String poemsRejected = 'Rechazados';
   static const String settingsTooltip = 'Ajustes';
   static const String mockCountersNote = 'Contadores de demostración';
   static const String mockPublished = 'Publicados';
@@ -119,4 +118,41 @@ abstract final class AppStrings {
   static const String avatarTooLarge =
       'La imagen es demasiado grande. El máximo es 5 MB.';
   static const String avatarUploadSuccess = 'Foto actualizada correctamente.';
+
+  static const String publishSuccessMessage =
+      'Tu poema fue enviado a revisión. Puedes consultar su estado en Mis poemas.';
+  static const String clearDraftTooltip = 'Borrar borrador';
+  static const String clearDraftTitle = '¿Borrar borrador?';
+  static const String clearDraftBody =
+      'Se borrarán el título, el tipo y el contenido del formulario.';
+  static const String viewPoem = 'Ver';
+  static const String hidePoem = 'Ocultar';
+  static const String unhidePoem = 'Mostrar';
+  static const String deletePoem = 'Eliminar';
+  static const String hidePoemTitle = '¿Ocultar poema?';
+  static const String hidePoemBody =
+      'El poema dejará de mostrarse públicamente. Podrás volver a mostrarlo desde Ocultos.';
+  static const String unhidePoemTitle = '¿Mostrar poema?';
+  static const String unhidePoemBody =
+      'El poema volverá a estar visible públicamente.';
+  static const String deletePoemTitle = '¿Eliminar poema?';
+  static const String deletePoemBody =
+      'Esta acción no se puede deshacer desde la aplicación. El poema se eliminará de tus listas.';
+  static const String hidePoemSuccess = 'Poema ocultado correctamente.';
+  static const String unhidePoemSuccess = 'Poema visible de nuevo.';
+  static const String deletePoemSuccess = 'Poema eliminado correctamente.';
+  static const String emptyPendingPoems = 'Aún no tienes poemas en revisión.';
+  static const String emptyPublishedPoems = 'Aún no tienes poemas publicados.';
+  static const String emptyHiddenPoems = 'No tienes poemas ocultos.';
+  static const String emptyRejectedPoems = 'No tienes poemas rechazados.';
+  static const String poemDetailTitle = 'Poema';
+  static const String createdAtLabel = 'Creado';
+  static const String publishedAtLabel = 'Publicado';
+  static const String statusLabel = 'Estado';
+  static const String titleTooLong =
+      'El título no puede superar los 100 caracteres.';
+  static const String contentTooLong =
+      'El poema no puede superar los 10000 caracteres.';
+  static const String poetryTypesEmpty =
+      'No hay tipos de poema disponibles en este momento.';
 }

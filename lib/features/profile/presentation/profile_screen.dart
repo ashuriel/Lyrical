@@ -157,32 +157,38 @@ class _ProfileBody extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           ProfileMenuTile(
             title: AppStrings.poemsInReview,
-            subtitle: 'Demostración',
             leading: Icon(
               Icons.hourglass_empty,
               color: scheme.onSurfaceVariant,
             ),
-            onTap: () {},
+            onTap: () => context.push('/app/profile/my-poems?tab=0'),
           ),
           const SizedBox(height: AppSpacing.sm),
           ProfileMenuTile(
             title: AppStrings.poemsPublished,
-            subtitle: 'Demostración',
             leading: Icon(
               Icons.menu_book_outlined,
               color: scheme.onSurfaceVariant,
             ),
-            onTap: () {},
+            onTap: () => context.push('/app/profile/my-poems?tab=1'),
           ),
           const SizedBox(height: AppSpacing.sm),
           ProfileMenuTile(
             title: AppStrings.poemsHidden,
-            subtitle: 'Demostración',
             leading: Icon(
               Icons.visibility_off_outlined,
               color: scheme.onSurfaceVariant,
             ),
-            onTap: () {},
+            onTap: () => context.push('/app/profile/my-poems?tab=2'),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          ProfileMenuTile(
+            title: AppStrings.poemsRejected,
+            leading: Icon(
+              Icons.cancel_outlined,
+              color: scheme.onSurfaceVariant,
+            ),
+            onTap: () => context.push('/app/profile/my-poems?tab=3'),
           ),
           const SizedBox(height: AppSpacing.xl),
           if (signOutError != null) ...[
