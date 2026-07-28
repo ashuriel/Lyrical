@@ -9,11 +9,13 @@ class CompactPoemCard extends StatelessWidget {
     super.key,
     required this.poem,
     this.onTap,
+    this.onAuthorTap,
     this.compact = false,
   });
 
   final PoemCardViewData poem;
   final VoidCallback? onTap;
+  final VoidCallback? onAuthorTap;
   final bool compact;
 
   @override
@@ -77,21 +79,37 @@ class CompactPoemCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
-                  AppAvatar(
-                    imageUrl: poem.authorAvatarUrl,
-                    size: 28,
-                    semanticLabel: 'Autor ${poem.authorAnonymousName}',
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
                   Expanded(
-                    child: Text(
-                      poem.authorAnonymousName,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: scheme.onSurface,
+                    child: InkWell(
+                      onTap: onAuthorTap,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.xs,
+                        ),
+                        child: Row(
+                          children: [
+                            AppAvatar(
+                              imageUrl: poem.authorAvatarUrl,
+                              size: 28,
+                              semanticLabel:
+                                  'Autor ${poem.authorAnonymousName}',
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(
+                              child: Text(
+                                poem.authorAnonymousName,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: scheme.onSurface,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),

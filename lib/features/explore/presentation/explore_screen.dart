@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/errors/poem_error_mapper.dart';
+import 'package:lyrical/core/navigation/open_author_profile.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
 import 'package:lyrical/core/widgets/app_page.dart';
 import 'package:lyrical/core/widgets/app_section_header.dart';
@@ -85,6 +86,8 @@ class ExploreScreen extends ConsumerWidget {
                     return FeaturedPoemCard(
                       poem: poem.toCardViewData(),
                       onTap: () => _openPoem(context, poem.id),
+                      onAuthorTap: () =>
+                          openAuthorProfile(context, ref, poem.authorId),
                     );
                   },
                 ),
@@ -116,6 +119,8 @@ class ExploreScreen extends ConsumerWidget {
                             poem: poem.toCardViewData(),
                             compact: true,
                             onTap: () => _openPoem(context, poem.id),
+                            onAuthorTap: () =>
+                                openAuthorProfile(context, ref, poem.authorId),
                           );
                         },
                       ),
@@ -173,6 +178,8 @@ class ExploreScreen extends ConsumerWidget {
                   CompactPoemCard(
                     poem: poems[i].toCardViewData(),
                     onTap: () => _openPoem(context, poems[i].id),
+                    onAuthorTap: () =>
+                        openAuthorProfile(context, ref, poems[i].authorId),
                   ),
                 ],
               ],
@@ -216,6 +223,11 @@ class ExploreScreen extends ConsumerWidget {
                   CompactPoemCard(
                     poem: state.items[i].toCardViewData(),
                     onTap: () => _openPoem(context, state.items[i].id),
+                    onAuthorTap: () => openAuthorProfile(
+                      context,
+                      ref,
+                      state.items[i].authorId,
+                    ),
                   ),
                 ],
                 const SizedBox(height: AppSpacing.md),

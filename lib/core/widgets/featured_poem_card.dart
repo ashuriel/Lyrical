@@ -4,10 +4,16 @@ import 'package:lyrical/core/widgets/poem_card_view_data.dart';
 import 'package:lyrical/core/widgets/poetry_type_badge.dart';
 
 class FeaturedPoemCard extends StatelessWidget {
-  const FeaturedPoemCard({super.key, required this.poem, this.onTap});
+  const FeaturedPoemCard({
+    super.key,
+    required this.poem,
+    this.onTap,
+    this.onAuthorTap,
+  });
 
   final PoemCardViewData poem;
   final VoidCallback? onTap;
+  final VoidCallback? onAuthorTap;
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +50,20 @@ class FeaturedPoemCard extends StatelessWidget {
                 style: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
               ),
               const SizedBox(height: AppSpacing.md),
-              Text(
-                poem.authorAnonymousName,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+              InkWell(
+                onTap: onAuthorTap,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                  child: Text(
+                    poem.authorAnonymousName,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

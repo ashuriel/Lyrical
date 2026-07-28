@@ -39,6 +39,7 @@ class PublicPoem {
       id: id,
       title: title,
       preview: preview,
+      authorId: authorId,
       authorAnonymousName: authorAnonymousName,
       poetryType: poetryTypeName,
       publishedAt: publishedAt,

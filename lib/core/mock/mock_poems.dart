@@ -11,6 +11,7 @@ abstract final class MockPoems {
       preview:
           'Hay una hora en que la ciudad se vuelve casi un susurro,\n'
           'y el pecho recuerda que también es paisaje.',
+      authorId: 'mock-author',
       authorAnonymousName: 'Serena Luna',
       poetryType: 'Verso libre',
       publishedAt: DateTime(2026, 7, 20),
@@ -21,6 +22,7 @@ abstract final class MockPoems {
       preview:
           'No cruzo aún la puerta que me nombra,\n'
           'pero ya late el aire de otro modo.',
+      authorId: 'mock-author',
       authorAnonymousName: 'Noble Roble',
       poetryType: 'Soneto',
       publishedAt: DateTime(2026, 7, 18),
@@ -32,6 +34,7 @@ abstract final class MockPoems {
           'Lluvia en el cristal.\n'
           'El té se enfría despacio.\n'
           'Nadie pregunta.',
+      authorId: 'mock-author',
       authorAnonymousName: 'Clara Aurora',
       poetryType: 'Haiku',
       publishedAt: DateTime(2026, 7, 15),
@@ -42,6 +45,7 @@ abstract final class MockPoems {
       preview:
           'Escribo como quien deja una luz encendida\n'
           'en una casa que ya no habita.',
+      authorId: 'mock-author',
       authorAnonymousName: 'Suave Brisa',
       poetryType: 'Poesía en prosa',
       publishedAt: DateTime(2026, 7, 12),
@@ -52,6 +56,7 @@ abstract final class MockPoems {
       preview:
           'Bajo la piel corre un agua antigua\n'
           'que no conoce fronteras ni apellidos.',
+      authorId: 'mock-author',
       authorAnonymousName: 'Libre Gorrión',
       poetryType: 'Poesía lírica',
       publishedAt: DateTime(2026, 7, 10),
@@ -62,6 +67,7 @@ abstract final class MockPoems {
       preview:
           'Empezó con pan y silencio.\n'
           'Terminó con una pregunta abierta al cielo.',
+      authorId: 'mock-author',
       authorAnonymousName: 'Dorada Niebla',
       poetryType: 'Poesía narrativa',
       publishedAt: DateTime(2026, 7, 8),
@@ -72,6 +78,7 @@ abstract final class MockPoems {
       preview:
           'Lo que se fue no pide luto:\n'
           'pide memoria con las manos limpias.',
+      authorId: 'mock-author',
       authorAnonymousName: 'Plácida Orilla',
       poetryType: 'Elegía',
       publishedAt: DateTime(2026, 7, 5),
@@ -84,6 +91,7 @@ abstract final class MockPoems {
           'U\n'
           'Z\n'
           'cae letra a letra sobre el papel.',
+      authorId: 'mock-author',
       authorAnonymousName: 'Áurea Hoja',
       poetryType: 'Acróstico',
       publishedAt: DateTime(2026, 7, 2),

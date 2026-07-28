@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/errors/poem_error_mapper.dart';
+import 'package:lyrical/core/navigation/open_author_profile.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
 import 'package:lyrical/core/widgets/app_avatar.dart';
 import 'package:lyrical/core/widgets/app_page.dart';
@@ -201,23 +202,32 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                     ],
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  Row(
-                    children: [
-                      AppAvatar(
-                        imageUrl: poem.authorAvatarUrl,
-                        size: 40,
-                        semanticLabel: 'Autor ${poem.authorAnonymousName}',
+                  InkWell(
+                    onTap: () => openAuthorProfile(context, ref, poem.authorId),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.xs,
                       ),
-                      const SizedBox(width: AppSpacing.md),
-                      Expanded(
-                        child: Text(
-                          poem.authorAnonymousName,
-                          style: theme.textTheme.titleMedium,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      child: Row(
+                        children: [
+                          AppAvatar(
+                            imageUrl: poem.authorAvatarUrl,
+                            size: 40,
+                            semanticLabel: 'Autor ${poem.authorAnonymousName}',
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: Text(
+                              poem.authorAnonymousName,
+                              style: theme.textTheme.titleMedium,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   if (poem.isOwner)

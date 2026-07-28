@@ -8,6 +8,7 @@ class MockPoem {
     required this.id,
     required this.title,
     required this.preview,
+    required this.authorId,
     required this.authorAnonymousName,
     required this.poetryType,
     required this.publishedAt,
@@ -17,6 +18,7 @@ class MockPoem {
   final String id;
   final String title;
   final String preview;
+  final String authorId;
   final String authorAnonymousName;
   final String poetryType;
   final DateTime publishedAt;
@@ -27,6 +29,7 @@ class MockPoem {
       id: id,
       title: title,
       preview: preview,
+      authorId: authorId,
       authorAnonymousName: authorAnonymousName,
       poetryType: poetryType,
       publishedAt: publishedAt,

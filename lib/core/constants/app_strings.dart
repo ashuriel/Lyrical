@@ -197,4 +197,19 @@ abstract final class AppStrings {
       'El poema dejará de aparecer en tu biblioteca.';
   static const String removeBookmarkConfirm = 'Quitar';
   static const String removeBookmarkSuccess = 'Poema quitado de guardados.';
+
+  static const String publicProfileTitle = 'Perfil';
+  static const String followButton = 'Seguir';
+  static const String followingButton = 'Siguiendo';
+  static const String publicProfilePoemsStat = 'Poemas';
+  static const String publicProfileFollowersStat = 'Seguidores';
+  static const String publicProfileFollowingStat = 'Siguiendo';
+  static const String publicProfilePublishedPoems = 'Poemas publicados';
+  static const String publicProfileEmptyPoemsTitle = 'Sin poemas';
+  static const String publicProfileEmptyPoemsMessage =
+      'Esta identidad todavía no ha publicado poemas.';
+  static const String unfollowConfirmTitle = 'Dejar de seguir';
+  static const String unfollowConfirmBody =
+      '¿Quieres dejar de seguir a esta identidad?';
+  static const String unfollowConfirmAction = 'Dejar de seguir';
 }

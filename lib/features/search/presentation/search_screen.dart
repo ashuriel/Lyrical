@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
+import 'package:lyrical/core/navigation/open_author_profile.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
 import 'package:lyrical/core/widgets/app_page.dart';
 import 'package:lyrical/core/widgets/compact_poem_card.dart';
@@ -213,6 +214,8 @@ class _SearchBody extends ConsumerWidget {
                   child: CompactPoemCard(
                     poem: poem.toCardViewData(),
                     onTap: () => onOpenPoem(poem.id),
+                    onAuthorTap: () =>
+                        openAuthorProfile(context, ref, poem.authorId),
                   ),
                 );
               }

@@ -17,6 +17,7 @@ import 'package:lyrical/features/profile/presentation/entry_screen.dart';
 import 'package:lyrical/features/profile/presentation/profile_screen.dart';
 import 'package:lyrical/features/profile/presentation/welcome_screen.dart';
 import 'package:lyrical/features/profile/providers/profile_providers.dart';
+import 'package:lyrical/features/public_profile/presentation/public_profile_screen.dart';
 import 'package:lyrical/features/publish/presentation/publish_screen.dart';
 import 'package:lyrical/features/search/presentation/search_screen.dart';
 
@@ -133,6 +134,26 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final poemId = state.pathParameters['poemId']!;
           return PoemDetailScreen(poemId: poemId);
+        },
+      ),
+      GoRoute(
+        path: '/app/users/:userId',
+        parentNavigatorKey: _rootNavigatorKey,
+        redirect: (context, state) {
+          final userId = state.pathParameters['userId'];
+          final currentId = ref
+              .read(supabaseClientProvider)
+              .auth
+              .currentUser
+              ?.id;
+          if (userId != null && currentId != null && userId == currentId) {
+            return '/app/profile';
+          }
+          return null;
+        },
+        builder: (context, state) {
+          final userId = state.pathParameters['userId']!;
+          return PublicProfileScreen(userId: userId);
         },
       ),
       StatefulShellRoute.indexedStack(

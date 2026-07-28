@@ -11,6 +11,7 @@ import 'package:lyrical/core/widgets/profile_menu_tile.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
 import 'package:lyrical/features/profile/domain/profile.dart';
 import 'package:lyrical/features/profile/providers/profile_providers.dart';
+import 'package:lyrical/features/public_profile/providers/public_profile_providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -53,7 +54,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-class _ProfileBody extends StatelessWidget {
+class _ProfileBody extends ConsumerWidget {
   const _ProfileBody({
     required this.profile,
     required this.genderLabel,
@@ -69,9 +70,14 @@ class _ProfileBody extends StatelessWidget {
   final VoidCallback onSignOut;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final publicStatsAsync = ref.watch(publicProfileProvider(profile.id));
+
+    final published = publicStatsAsync.asData?.value.publishedPoemCount;
+    final followers = publicStatsAsync.asData?.value.followerCount;
+    final following = publicStatsAsync.asData?.value.followingCount;
 
     return AppPage(
       child: ListView(
@@ -126,23 +132,21 @@ class _ProfileBody extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text(AppStrings.mockCountersNote, style: theme.textTheme.bodySmall),
-          const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
               _MockCounter(
-                label: AppStrings.mockPublished,
-                value: '0',
+                label: AppStrings.publicProfilePoemsStat,
+                value: published?.toString() ?? '—',
                 color: scheme.onSurface,
               ),
               _MockCounter(
-                label: AppStrings.mockFollowers,
-                value: '0',
+                label: AppStrings.publicProfileFollowersStat,
+                value: followers?.toString() ?? '—',
                 color: scheme.onSurface,
               ),
               _MockCounter(
-                label: AppStrings.mockFollowing,
-                value: '0',
+                label: AppStrings.publicProfileFollowingStat,
+                value: following?.toString() ?? '—',
                 color: scheme.onSurface,
               ),
             ],
