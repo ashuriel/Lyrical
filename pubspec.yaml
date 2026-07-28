@@ -26,9 +26,32 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
 
   assets:
     - .env
+    - logo/lyrical.png
+    - logo/lyrical_mark.png
+    - logo/lyrical_app_icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: logo/lyrical_app_icon.png
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: logo/lyrical_app_icon.png
+  background_color_ios: "#FFFFFF"
+  web:
+    generate: true
+    image_path: logo/lyrical_app_icon.png
+    background_color: "#FFFFFF"
+    theme_color: "#1F3A32"
+  windows:
+    generate: true
+    image_path: logo/lyrical_app_icon.png
+  macos:
+    generate: true
+    image_path: logo/lyrical_app_icon.png

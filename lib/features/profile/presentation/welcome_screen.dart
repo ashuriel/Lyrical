@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
+import 'package:lyrical/core/widgets/app_logo.dart';
 import 'package:lyrical/features/profile/domain/profile.dart';
 import 'package:lyrical/features/profile/providers/profile_providers.dart';
 
@@ -74,14 +75,7 @@ class _WelcomeContentState extends ConsumerState<_WelcomeContent> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    AppStrings.appTitle,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  const Center(child: AppLogo(size: 96, showTitle: true)),
                   const SizedBox(height: 40),
                   Text(
                     AppStrings.welcomeHeading,

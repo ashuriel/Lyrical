@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
+import 'package:lyrical/core/theme/app_spacing.dart';
+import 'package:lyrical/core/widgets/app_logo.dart';
 
 /// Calm splash shown while the initial auth state resolves.
 class SplashScreen extends StatelessWidget {
@@ -17,11 +19,14 @@ class SplashScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const AppLogo(size: 120, showTitle: true, spacing: 20),
+                const SizedBox(height: AppSpacing.xl),
                 Text(
-                  AppStrings.appTitle,
-                  style: theme.textTheme.headlineMedium,
+                  AppStrings.splashTagline,
+                  style: theme.textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: AppSpacing.xl),
                 const SizedBox(
                   width: 28,
                   height: 28,

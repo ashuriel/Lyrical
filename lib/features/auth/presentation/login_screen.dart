@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/utils/validators.dart';
+import 'package:lyrical/core/widgets/app_logo.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -59,10 +60,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      AppStrings.appTitle,
-                      style: theme.textTheme.headlineMedium,
-                      textAlign: TextAlign.center,
+                    const Center(
+                      child: AppLogo(size: 112, showTitle: true, spacing: 16),
                     ),
                     const SizedBox(height: 8),
                     Text(

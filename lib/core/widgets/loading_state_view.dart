@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
+import 'package:lyrical/core/widgets/app_logo.dart';
 
 class LoadingStateView extends StatelessWidget {
   const LoadingStateView({super.key, this.message});
@@ -17,13 +17,7 @@ class LoadingStateView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              AppStrings.appTitle,
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            const AppLogo(size: 72, showTitle: true, spacing: 12),
             const SizedBox(height: AppSpacing.lg),
             const SizedBox(
               width: 26,

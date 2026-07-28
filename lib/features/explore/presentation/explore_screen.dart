@@ -6,6 +6,7 @@ import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/errors/poem_error_mapper.dart';
 import 'package:lyrical/core/navigation/open_author_profile.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
+import 'package:lyrical/core/widgets/app_logo.dart';
 import 'package:lyrical/core/widgets/app_page.dart';
 import 'package:lyrical/core/widgets/app_section_header.dart';
 import 'package:lyrical/core/widgets/compact_poem_card.dart';
@@ -49,11 +50,22 @@ class ExploreScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            AppStrings.appTitle,
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              color: theme.colorScheme.primary,
-                            ),
+                          Row(
+                            children: [
+                              const AppLogo(size: 36),
+                              const SizedBox(width: AppSpacing.sm),
+                              Flexible(
+                                child: Text(
+                                  AppStrings.appTitle,
+                                  style: theme.textTheme.headlineMedium
+                                      ?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                           if (anonymousName != null) ...[
                             const SizedBox(height: AppSpacing.sm),
