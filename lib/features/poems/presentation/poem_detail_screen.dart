@@ -4,11 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/errors/poem_error_mapper.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
+import 'package:lyrical/core/widgets/app_avatar.dart';
 import 'package:lyrical/core/widgets/app_page.dart';
 import 'package:lyrical/core/widgets/error_state_view.dart';
 import 'package:lyrical/core/widgets/loading_state_view.dart';
 import 'package:lyrical/core/widgets/poetry_type_badge.dart';
-import 'package:lyrical/features/poems/domain/poem.dart';
+import 'package:lyrical/features/explore/providers/explore_providers.dart';
 import 'package:lyrical/features/poems/domain/poem_status.dart';
 import 'package:lyrical/features/poems/providers/poem_providers.dart';
 
@@ -38,7 +39,7 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && mounted) {
-      ref.invalidate(currentUserPoemProvider(widget.poemId));
+      ref.invalidate(poemDetailProvider(widget.poemId));
     }
   }
 
@@ -80,7 +81,12 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
     );
   }
 
-  Future<void> _hide(Poem poem) async {
+  Future<void> _refreshDetail() async {
+    ref.invalidate(poemDetailProvider(widget.poemId));
+    await ref.read(poemDetailProvider(widget.poemId).future);
+  }
+
+  Future<void> _hide(PoemDetailView poem) async {
     final okConfirm = await _confirm(
       title: AppStrings.hidePoemTitle,
       body: AppStrings.hidePoemBody,
@@ -95,12 +101,14 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
       _showActionError('No se pudo ocultar el poema. Inténtalo de nuevo.');
       return;
     }
+    await _refreshDetail();
+    if (!mounted) return;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text(AppStrings.hidePoemSuccess)));
   }
 
-  Future<void> _unhide(Poem poem) async {
+  Future<void> _unhide(PoemDetailView poem) async {
     final okConfirm = await _confirm(
       title: AppStrings.unhidePoemTitle,
       body: AppStrings.unhidePoemBody,
@@ -115,12 +123,14 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
       _showActionError('No se pudo mostrar el poema. Inténtalo de nuevo.');
       return;
     }
+    await _refreshDetail();
+    if (!mounted) return;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text(AppStrings.unhidePoemSuccess)));
   }
 
-  Future<void> _delete(Poem poem) async {
+  Future<void> _delete(PoemDetailView poem) async {
     final okConfirm = await _confirm(
       title: AppStrings.deletePoemTitle,
       body: AppStrings.deletePoemBody,
@@ -143,7 +153,7 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final poemAsync = ref.watch(currentUserPoemProvider(widget.poemId));
+    final poemAsync = ref.watch(poemDetailProvider(widget.poemId));
     final actionState = ref.watch(poemActionControllerProvider);
     final busy = actionState.isLoading;
     final theme = Theme.of(context);
@@ -154,8 +164,7 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
         actions: [
           IconButton(
             tooltip: AppStrings.retryButton,
-            onPressed: () =>
-                ref.invalidate(currentUserPoemProvider(widget.poemId)),
+            onPressed: () => ref.invalidate(poemDetailProvider(widget.poemId)),
             icon: const Icon(Icons.refresh),
           ),
         ],
@@ -164,15 +173,12 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
         loading: () => const LoadingStateView(),
         error: (error, _) => ErrorStateView(
           message: PoemErrorMapper.map(error),
-          onRetry: () => ref.invalidate(currentUserPoemProvider(widget.poemId)),
+          onRetry: () => ref.invalidate(poemDetailProvider(widget.poemId)),
         ),
         data: (poem) {
           return AppPage(
             child: RefreshIndicator(
-              onRefresh: () async {
-                ref.invalidate(currentUserPoemProvider(widget.poemId));
-                await ref.read(currentUserPoemProvider(widget.poemId).future);
-              },
+              onRefresh: _refreshDetail,
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: [
@@ -184,26 +190,42 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       PoetryTypeBadge(label: poem.poetryTypeName),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(_statusIcon(poem), size: 18),
-                          const SizedBox(width: AppSpacing.xs),
-                          Text(
-                            '${AppStrings.statusLabel}: ${poem.displayStatusLabel}',
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                        ],
+                      if (poem.isOwner) ...[
+                        Icon(_statusIcon(poem), size: 18),
+                        Text(
+                          '${AppStrings.statusLabel}: ${_ownerStatusLabel(poem)}',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Row(
+                    children: [
+                      AppAvatar(
+                        imageUrl: poem.authorAvatarUrl,
+                        size: 40,
+                        semanticLabel: 'Autor ${poem.authorAnonymousName}',
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Text(
+                          poem.authorAnonymousName,
+                          style: theme.textTheme.titleMedium,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  Text(
-                    '${AppStrings.createdAtLabel}: ${_formatDate(poem.createdAt)}',
-                    style: theme.textTheme.bodySmall,
-                  ),
+                  if (poem.isOwner)
+                    Text(
+                      '${AppStrings.createdAtLabel}: ${_formatDate(poem.createdAt)}',
+                      style: theme.textTheme.bodySmall,
+                    ),
                   if (poem.publishedAt != null) ...[
-                    const SizedBox(height: AppSpacing.xs),
+                    if (poem.isOwner) const SizedBox(height: AppSpacing.xs),
                     Text(
                       '${AppStrings.publishedAtLabel}: ${_formatDate(poem.publishedAt!)}',
                       style: theme.textTheme.bodySmall,
@@ -214,27 +236,30 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                     poem.content,
                     style: theme.textTheme.bodyLarge?.copyWith(height: 1.7),
                   ),
-                  const SizedBox(height: AppSpacing.xl),
-                  Wrap(
-                    spacing: AppSpacing.sm,
-                    runSpacing: AppSpacing.sm,
-                    children: [
-                      if (poem.status == PoemStatus.approved && !poem.isHidden)
-                        FilledButton.tonal(
-                          onPressed: busy ? null : () => _hide(poem),
-                          child: const Text(AppStrings.hidePoem),
+                  if (poem.isOwner) ...[
+                    const SizedBox(height: AppSpacing.xl),
+                    Wrap(
+                      spacing: AppSpacing.sm,
+                      runSpacing: AppSpacing.sm,
+                      children: [
+                        if (poem.status == PoemStatus.approved &&
+                            !poem.isHidden)
+                          FilledButton.tonal(
+                            onPressed: busy ? null : () => _hide(poem),
+                            child: const Text(AppStrings.hidePoem),
+                          ),
+                        if (poem.status == PoemStatus.approved && poem.isHidden)
+                          FilledButton.tonal(
+                            onPressed: busy ? null : () => _unhide(poem),
+                            child: const Text(AppStrings.unhidePoem),
+                          ),
+                        OutlinedButton(
+                          onPressed: busy ? null : () => _delete(poem),
+                          child: const Text(AppStrings.deletePoem),
                         ),
-                      if (poem.status == PoemStatus.approved && poem.isHidden)
-                        FilledButton.tonal(
-                          onPressed: busy ? null : () => _unhide(poem),
-                          child: const Text(AppStrings.unhidePoem),
-                        ),
-                      OutlinedButton(
-                        onPressed: busy ? null : () => _delete(poem),
-                        child: const Text(AppStrings.deletePoem),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.lg),
                 ],
               ),
@@ -245,7 +270,14 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
     );
   }
 
-  IconData _statusIcon(Poem poem) {
+  String _ownerStatusLabel(PoemDetailView poem) {
+    if (poem.status == PoemStatus.approved && poem.isHidden) {
+      return 'Oculto';
+    }
+    return poem.status.labelEs;
+  }
+
+  IconData _statusIcon(PoemDetailView poem) {
     if (poem.status == PoemStatus.approved && poem.isHidden) {
       return Icons.visibility_off_outlined;
     }

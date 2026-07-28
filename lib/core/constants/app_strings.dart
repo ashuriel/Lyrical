@@ -155,4 +155,13 @@ abstract final class AppStrings {
       'El poema no puede superar los 10000 caracteres.';
   static const String poetryTypesEmpty =
       'No hay tipos de poema disponibles en este momento.';
+
+  static const String exploreLoadError =
+      'No pudimos cargar los poemas. Inténtalo de nuevo.';
+  static const String exploreEmptyPoems =
+      'Aún no hay poemas públicos para mostrar.';
+  static const String exploreEmptySection =
+      'No hay poemas en esta sección todavía.';
+  static const String loadMorePoems = 'Cargar más';
+  static const String poemUnavailable = 'Este poema ya no está disponible.';
 }

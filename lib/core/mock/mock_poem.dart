@@ -1,6 +1,8 @@
+import 'package:lyrical/core/widgets/poem_card_view_data.dart';
+
 /// Temporary poem view model for UI prototypes only.
 ///
-/// Replace with production poem models/repositories when connecting Supabase.
+/// Still used by Search until that feature connects to Supabase.
 class MockPoem {
   const MockPoem({
     required this.id,
@@ -19,4 +21,16 @@ class MockPoem {
   final String poetryType;
   final DateTime publishedAt;
   final String? authorAvatarUrl;
+
+  PoemCardViewData toCardViewData() {
+    return PoemCardViewData(
+      id: id,
+      title: title,
+      preview: preview,
+      authorAnonymousName: authorAnonymousName,
+      poetryType: poetryType,
+      publishedAt: publishedAt,
+      authorAvatarUrl: authorAvatarUrl,
+    );
+  }
 }

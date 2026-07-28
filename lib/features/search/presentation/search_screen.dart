@@ -110,7 +110,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       separatorBuilder: (_, _) =>
                           const SizedBox(height: AppSpacing.md),
                       itemBuilder: (context, index) {
-                        return CompactPoemCard(poem: results[index]);
+                        return CompactPoemCard(
+                          poem: results[index].toCardViewData(),
+                        );
                       },
                     ),
             ),

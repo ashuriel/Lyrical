@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lyrical/core/mock/mock_poem.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
 import 'package:lyrical/core/widgets/app_avatar.dart';
+import 'package:lyrical/core/widgets/poem_card_view_data.dart';
 import 'package:lyrical/core/widgets/poetry_type_badge.dart';
 
 class CompactPoemCard extends StatelessWidget {
@@ -12,7 +12,7 @@ class CompactPoemCard extends StatelessWidget {
     this.compact = false,
   });
 
-  final MockPoem poem;
+  final PoemCardViewData poem;
   final VoidCallback? onTap;
   final bool compact;
 

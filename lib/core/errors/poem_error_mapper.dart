@@ -15,7 +15,7 @@ abstract final class PoemErrorMapper {
         return 'No tienes permiso para realizar esta acción.';
       }
       if (code == 'PGRST116' || message.contains('0 rows')) {
-        return 'No se encontró el poema.';
+        return 'Este poema ya no está disponible.';
       }
       if (message.contains('network') || message.contains('fetch')) {
         return 'No se pudo conectar. Comprueba tu conexión a internet.';
