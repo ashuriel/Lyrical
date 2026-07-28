@@ -21,6 +21,7 @@ class FeaturedPoemCard extends StatelessWidget {
     final scheme = theme.colorScheme;
 
     return Card(
+      color: scheme.surface,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -30,6 +31,7 @@ class FeaturedPoemCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
             border: Border.all(color: scheme.outline),
+            color: scheme.surfaceContainerLow.withValues(alpha: 0.55),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +49,7 @@ class FeaturedPoemCard extends StatelessWidget {
                 poem.preview,
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
+                style: theme.textTheme.bodyLarge?.copyWith(height: 1.7),
               ),
               const SizedBox(height: AppSpacing.md),
               InkWell(
@@ -58,7 +60,8 @@ class FeaturedPoemCard extends StatelessWidget {
                   child: Text(
                     poem.authorAnonymousName,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
+                      color: scheme.onSurfaceVariant,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

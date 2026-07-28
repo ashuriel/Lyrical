@@ -11,38 +11,47 @@ class MainShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) {
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          );
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.explore_outlined),
-            selectedIcon: Icon(Icons.explore),
-            label: AppStrings.exploreLabel,
+      bottomNavigationBar: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: scheme.outlineVariant, width: 1),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.edit_outlined),
-            selectedIcon: Icon(Icons.edit),
-            label: AppStrings.publishLabel,
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search),
-            selectedIcon: Icon(Icons.search),
-            label: AppStrings.searchLabel,
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: AppStrings.profileLabel,
-          ),
-        ],
+        ),
+        child: NavigationBar(
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: (index) {
+            navigationShell.goBranch(
+              index,
+              initialLocation: index == navigationShell.currentIndex,
+            );
+          },
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.explore_outlined),
+              selectedIcon: Icon(Icons.explore),
+              label: AppStrings.exploreLabel,
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.edit_outlined),
+              selectedIcon: Icon(Icons.edit),
+              label: AppStrings.publishLabel,
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.search),
+              selectedIcon: Icon(Icons.search),
+              label: AppStrings.searchLabel,
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline),
+              selectedIcon: Icon(Icons.person),
+              label: AppStrings.profileLabel,
+            ),
+          ],
+        ),
       ),
     );
   }

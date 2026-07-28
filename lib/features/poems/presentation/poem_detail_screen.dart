@@ -179,12 +179,16 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
         ),
         data: (poem) {
           return AppPage(
+            maxWidth: AppSpacing.maxReadingWidth,
             child: RefreshIndicator(
               onRefresh: _refreshDetail,
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: [
-                  Text(poem.title, style: theme.textTheme.headlineSmall),
+                  Text(
+                    poem.title,
+                    style: theme.textTheme.headlineSmall?.copyWith(height: 1.3),
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   Wrap(
                     spacing: AppSpacing.sm,
@@ -193,10 +197,14 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                     children: [
                       PoetryTypeBadge(label: poem.poetryTypeName),
                       if (poem.isOwner) ...[
-                        Icon(_statusIcon(poem), size: 18),
+                        Icon(
+                          _statusIcon(poem),
+                          size: 18,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                         Text(
                           '${AppStrings.statusLabel}: ${_ownerStatusLabel(poem)}',
-                          style: theme.textTheme.bodyMedium,
+                          style: theme.textTheme.bodySmall,
                         ),
                       ],
                     ],
@@ -220,7 +228,9 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                           Expanded(
                             child: Text(
                               poem.authorAnonymousName,
-                              style: theme.textTheme.titleMedium,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -251,7 +261,11 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                   const SizedBox(height: AppSpacing.xl),
                   SelectableText(
                     poem.content,
-                    style: theme.textTheme.bodyLarge?.copyWith(height: 1.7),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      height: 1.75,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                   if (poem.isOwner) ...[
                     const SizedBox(height: AppSpacing.xl),
@@ -272,6 +286,10 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                           ),
                         OutlinedButton(
                           onPressed: busy ? null : () => _delete(poem),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: theme.colorScheme.error,
+                            side: BorderSide(color: theme.colorScheme.error),
+                          ),
                           child: const Text(AppStrings.deletePoem),
                         ),
                       ],

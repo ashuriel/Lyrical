@@ -71,9 +71,10 @@ class CompactPoemCard extends StatelessWidget {
                 poem.preview,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  height: 1.55,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  height: 1.6,
                   color: scheme.onSurface,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               const SizedBox(height: AppSpacing.md),

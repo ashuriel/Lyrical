@@ -178,7 +178,7 @@ class _ProfileBody extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          FilledButton.tonal(
+          FilledButton(
             onPressed: () => context.push('/app/profile/edit'),
             child: const Text(AppStrings.editProfile),
           ),
@@ -277,12 +277,17 @@ class _MockCounter extends StatelessWidget {
         children: [
           Text(
             value,
-            style: theme.textTheme.headlineSmall?.copyWith(color: color),
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             label,
-            style: theme.textTheme.bodySmall,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

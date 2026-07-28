@@ -39,8 +39,8 @@ class AppAvatar extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: size / 2,
-            backgroundColor: scheme.secondary.withValues(alpha: 0.18),
-            foregroundColor: scheme.onSurface,
+            backgroundColor: scheme.tertiaryContainer,
+            foregroundColor: scheme.onTertiaryContainer,
             backgroundImage: provider,
             child: provider == null
                 ? Icon(Icons.person_outline, size: size * 0.5)

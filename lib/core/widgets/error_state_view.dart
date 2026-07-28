@@ -17,6 +17,12 @@ class ErrorStateView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Icon(
+            Icons.info_outline,
+            size: 32,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(height: AppSpacing.md),
           Text(
             message,
             style: theme.textTheme.bodyLarge,

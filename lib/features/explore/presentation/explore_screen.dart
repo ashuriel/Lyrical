@@ -51,13 +51,17 @@ class ExploreScreen extends ConsumerWidget {
                         children: [
                           Text(
                             AppStrings.appTitle,
-                            style: theme.textTheme.headlineSmall,
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
                           if (anonymousName != null) ...[
-                            const SizedBox(height: AppSpacing.xs),
+                            const SizedBox(height: AppSpacing.sm),
                             Text(
                               '${AppStrings.exploreGreetingPrefix} $anonymousName',
-                              style: theme.textTheme.bodyLarge,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),

@@ -17,12 +17,18 @@ class LoadingStateView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(AppStrings.appTitle, style: theme.textTheme.titleLarge),
+            Text(
+              AppStrings.appTitle,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: AppSpacing.lg),
             const SizedBox(
-              width: 28,
-              height: 28,
-              child: CircularProgressIndicator(strokeWidth: 2.5),
+              width: 26,
+              height: 26,
+              child: CircularProgressIndicator(strokeWidth: 2.4),
             ),
             if (message != null) ...[
               const SizedBox(height: AppSpacing.md),

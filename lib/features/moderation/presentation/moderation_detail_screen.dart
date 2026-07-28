@@ -200,7 +200,7 @@ class _ModerationDetailScreenState
                   const SizedBox(height: AppSpacing.lg),
                   SelectableText(
                     poem.content,
-                    style: theme.textTheme.bodyLarge?.copyWith(height: 1.55),
+                    style: theme.textTheme.bodyLarge?.copyWith(height: 1.75),
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   Text(
@@ -213,16 +213,25 @@ class _ModerationDetailScreenState
                   FilledButton(
                     onPressed: _busy ? null : () => _approve(poem),
                     child: _busy
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: scheme.onPrimary,
+                            ),
                           )
                         : const Text(AppStrings.moderationApproveAction),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   OutlinedButton(
                     onPressed: _busy ? null : () => _reject(poem),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: scheme.error,
+                      side: BorderSide(
+                        color: scheme.error.withValues(alpha: 0.75),
+                      ),
+                    ),
                     child: const Text(AppStrings.moderationRejectAction),
                   ),
                   const SizedBox(height: AppSpacing.lg),

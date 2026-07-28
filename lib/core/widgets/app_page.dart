@@ -3,10 +3,18 @@ import 'package:lyrical/core/theme/app_spacing.dart';
 
 /// Centers content and caps width on unusually wide screens.
 class AppPage extends StatelessWidget {
-  const AppPage({super.key, required this.child, this.padding});
+  const AppPage({
+    super.key,
+    required this.child,
+    this.padding,
+    this.maxWidth = AppSpacing.maxContentWidth,
+  });
 
   final Widget child;
   final EdgeInsetsGeometry? padding;
+
+  /// Readable maximum width; use [AppSpacing.maxReadingWidth] for poem detail.
+  final double maxWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +22,7 @@ class AppPage extends StatelessWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: AppSpacing.maxContentWidth,
-          ),
+          constraints: BoxConstraints(maxWidth: maxWidth),
           child: Padding(
             padding:
                 padding ??

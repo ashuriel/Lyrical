@@ -29,18 +29,22 @@ class ProfileMenuTile extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         child: Container(
+          constraints: const BoxConstraints(minHeight: AppSpacing.minTapTarget),
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
-            vertical: AppSpacing.md,
+            vertical: AppSpacing.sm + 4,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-            border: Border.all(color: scheme.outline),
+            border: Border.all(color: scheme.outline.withValues(alpha: 0.85)),
           ),
           child: Row(
             children: [
               if (leading != null) ...[
-                leading!,
+                IconTheme(
+                  data: IconThemeData(color: scheme.onSurfaceVariant, size: 22),
+                  child: leading!,
+                ),
                 const SizedBox(width: AppSpacing.md),
               ],
               Expanded(
@@ -56,7 +60,11 @@ class ProfileMenuTile extends StatelessWidget {
                 ),
               ),
               trailing ??
-                  Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+                  Icon(
+                    Icons.chevron_right,
+                    color: scheme.onSurfaceVariant,
+                    size: 22,
+                  ),
             ],
           ),
         ),

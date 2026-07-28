@@ -226,64 +226,72 @@ class _NotificationTile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (isModeration)
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: scheme.surfaceContainerHighest,
-                child: Icon(
-                  notification.type == AppNotificationType.poemApproved
-                      ? Icons.check_circle_outline
-                      : Icons.cancel_outlined,
-                  color: scheme.onSurfaceVariant,
+      child: ColoredBox(
+        color: notification.isRead
+            ? Colors.transparent
+            : scheme.tertiaryContainer.withValues(alpha: 0.35),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.md,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isModeration)
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: scheme.tertiaryContainer,
+                  child: Icon(
+                    notification.type == AppNotificationType.poemApproved
+                        ? Icons.check_circle_outline
+                        : Icons.cancel_outlined,
+                    color: scheme.onTertiaryContainer,
+                  ),
+                )
+              else
+                AppAvatar(
+                  imageUrl: notification.actorAvatarUrl,
+                  size: 40,
+                  semanticLabel: notification.actorAnonymousName == null
+                      ? AppStrings.notificationsTitle
+                      : 'Avatar de ${notification.actorAnonymousName}',
                 ),
-              )
-            else
-              AppAvatar(
-                imageUrl: notification.actorAvatarUrl,
-                size: 40,
-                semanticLabel: notification.actorAnonymousName == null
-                    ? AppStrings.notificationsTitle
-                    : 'Avatar de ${notification.actorAnonymousName}',
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      message,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: notification.isRead
+                            ? FontWeight.w400
+                            : FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(dateLabel, style: theme.textTheme.bodySmall),
+                  ],
+                ),
               ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    message,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: notification.isRead
-                          ? FontWeight.w400
-                          : FontWeight.w600,
+              if (!notification.isRead) ...[
+                const SizedBox(width: AppSpacing.sm),
+                Semantics(
+                  label: 'Sin leer',
+                  child: Container(
+                    width: 9,
+                    height: 9,
+                    margin: const EdgeInsets.only(top: 6),
+                    decoration: BoxDecoration(
+                      color: scheme.primary,
+                      shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(dateLabel, style: theme.textTheme.bodySmall),
-                ],
-              ),
-            ),
-            if (!notification.isRead) ...[
-              const SizedBox(width: AppSpacing.sm),
-              Container(
-                width: 10,
-                height: 10,
-                margin: const EdgeInsets.only(top: 6),
-                decoration: BoxDecoration(
-                  color: scheme.primary,
-                  shape: BoxShape.circle,
                 ),
-              ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

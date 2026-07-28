@@ -9,7 +9,12 @@ abstract final class AppSpacing {
 
   static const double pageHorizontal = 20;
   static const double pageVertical = 16;
-  static const double maxContentWidth = 720;
+
+  /// General page content cap on wide screens (profile, lists, explorer).
+  static const double maxContentWidth = 680;
+
+  /// Slightly narrower cap for long-form poem reading.
+  static const double maxReadingWidth = 560;
 
   static const double radiusSm = 8;
   static const double radiusMd = 12;

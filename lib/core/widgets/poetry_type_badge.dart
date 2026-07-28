@@ -17,16 +17,17 @@ class PoetryTypeBadge extends StatelessWidget {
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: scheme.secondary.withValues(alpha: 0.14),
+        color: scheme.tertiaryContainer,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-        border: Border.all(color: scheme.outline),
       ),
       child: Text(
         label,
         style: theme.textTheme.labelMedium?.copyWith(
-          color: scheme.onSurface,
-          fontWeight: FontWeight.w600,
+          color: scheme.onTertiaryContainer,
+          fontWeight: FontWeight.w500,
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

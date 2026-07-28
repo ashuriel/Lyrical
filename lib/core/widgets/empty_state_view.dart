@@ -26,7 +26,7 @@ class EmptyStateView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 40, color: scheme.onSurfaceVariant),
+          Icon(icon, size: 36, color: scheme.tertiary),
           const SizedBox(height: AppSpacing.md),
           Text(
             title,
@@ -36,7 +36,7 @@ class EmptyStateView extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text(
             message,
-            style: theme.textTheme.bodyLarge,
+            style: theme.textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
         ],
