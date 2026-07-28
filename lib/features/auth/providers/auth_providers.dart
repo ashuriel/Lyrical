@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lyrical/core/errors/auth_error_mapper.dart';
 import 'package:lyrical/features/auth/data/auth_repository.dart';
@@ -131,25 +130,4 @@ class AuthFailure implements Exception {
 
   @override
   String toString() => message;
-}
-
-/// Notifies [GoRouter] when auth status changes.
-class AuthRefreshListenable extends ChangeNotifier {
-  AuthRefreshListenable(this._ref) {
-    _subscription = _ref.listen<AsyncValue<AppAuthStatus>>(authStateProvider, (
-      _,
-      _,
-    ) {
-      notifyListeners();
-    });
-  }
-
-  final Ref _ref;
-  late final ProviderSubscription<AsyncValue<AppAuthStatus>> _subscription;
-
-  @override
-  void dispose() {
-    _subscription.close();
-    super.dispose();
-  }
 }

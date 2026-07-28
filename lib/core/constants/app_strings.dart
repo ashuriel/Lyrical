@@ -52,4 +52,12 @@ abstract final class AppStrings {
   static const String signOutButton = 'Cerrar sesión';
   static const String showPassword = 'Mostrar contraseña';
   static const String hidePassword = 'Ocultar contraseña';
+
+  static const String retryButton = 'Reintentar';
+
+  static const String welcomeHeading = 'Bienvenido a Lyrical';
+  static const String welcomeIdentityLabel = 'Tu identidad poética es';
+  static const String welcomeDescription =
+      'En Lyrical, tu nombre real no importa. Aquí, tus palabras hablan por ti.';
+  static const String welcomeEnterButton = 'Entrar a Lyrical';
 }
