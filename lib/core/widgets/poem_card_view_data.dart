@@ -1,4 +1,4 @@
-/// Shared card-facing poem data for Explorer and remaining mock Search UI.
+/// Shared card-facing poem data for Explorer and Search.
 class PoemCardViewData {
   const PoemCardViewData({
     required this.id,

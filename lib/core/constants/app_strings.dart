@@ -83,10 +83,20 @@ abstract final class AppStrings {
 
   static const String searchHint = 'Buscar por título, contenido o autor';
   static const String searchAllTypes = 'Todos';
+  static const String searchInitialTitle = 'Buscar';
+  static const String searchInitialMessage =
+      'Busca poemas, palabras o identidades poéticas.';
   static const String searchEmptyTitle = 'Sin resultados';
   static const String searchEmptyMessage =
-      'Prueba con otras palabras o cambia el tipo de poema.';
+      'No encontramos poemas con esos criterios.';
+  static const String searchGenericError =
+      'No pudimos completar la búsqueda. Inténtalo de nuevo.';
   static const String clearSearchTooltip = 'Limpiar búsqueda';
+
+  static String searchResultCount(int count) {
+    if (count == 1) return '1 resultado';
+    return '$count resultados';
+  }
 
   static const String editProfile = 'Editar perfil';
   static const String myPoems = 'Mis poemas';

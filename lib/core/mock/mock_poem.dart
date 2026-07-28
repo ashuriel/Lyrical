@@ -2,7 +2,7 @@ import 'package:lyrical/core/widgets/poem_card_view_data.dart';
 
 /// Temporary poem view model for UI prototypes only.
 ///
-/// Still used by Search until that feature connects to Supabase.
+/// Search and Explorer now use Supabase [PublicPoem] models.
 class MockPoem {
   const MockPoem({
     required this.id,

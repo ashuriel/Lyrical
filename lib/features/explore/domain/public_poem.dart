@@ -54,14 +54,7 @@ class PublicPoem {
     final createdAt = json['created_at'];
     final publishedAtRaw = json['published_at'];
 
-    final poetryTypeIdRaw = json['poetry_type_id'];
-    final poetryTypeId = switch (poetryTypeIdRaw) {
-      final int value => value,
-      final num value => value.toInt(),
-      _ => throw const FormatException(
-        'PublicPoem.poetry_type_id is missing or invalid.',
-      ),
-    };
+    final poetryTypeId = _parsePoetryTypeId(json['poetry_type_id']);
 
     if (id is! String || id.isEmpty) {
       throw const FormatException('PublicPoem.id is missing or invalid.');
@@ -124,5 +117,78 @@ class PublicPoem {
       publishedAt: DateTime.parse(publishedAtRaw),
       createdAt: DateTime.parse(createdAt),
     );
+  }
+
+  /// Flat row from [search_public_poems] RPC (no nested embeds).
+  factory PublicPoem.fromSearchRpc(Map<String, dynamic> json) {
+    final id = json['poem_id'];
+    final title = json['title'];
+    final content = json['content'];
+    final authorId = json['author_id'];
+    final anonymousName = json['author_anonymous_name'];
+    final avatarUrl = json['author_avatar_url'];
+    final poetryTypeName = json['poetry_type_name'];
+    final createdAt = json['created_at'];
+    final publishedAtRaw = json['published_at'];
+    final poetryTypeId = _parsePoetryTypeId(json['poetry_type_id']);
+
+    if (id is! String || id.isEmpty) {
+      throw const FormatException('PublicPoem.poem_id is missing or invalid.');
+    }
+    if (title is! String) {
+      throw const FormatException('PublicPoem.title is missing or invalid.');
+    }
+    if (content is! String) {
+      throw const FormatException('PublicPoem.content is missing or invalid.');
+    }
+    if (authorId is! String || authorId.isEmpty) {
+      throw const FormatException(
+        'PublicPoem.author_id is missing or invalid.',
+      );
+    }
+    if (anonymousName is! String || anonymousName.isEmpty) {
+      throw const FormatException(
+        'PublicPoem.author_anonymous_name is missing.',
+      );
+    }
+    if (avatarUrl != null && avatarUrl is! String) {
+      throw const FormatException('PublicPoem.author_avatar_url is invalid.');
+    }
+    if (poetryTypeName is! String || poetryTypeName.isEmpty) {
+      throw const FormatException('PublicPoem.poetry_type_name is missing.');
+    }
+    if (createdAt is! String) {
+      throw const FormatException(
+        'PublicPoem.created_at is missing or invalid.',
+      );
+    }
+    if (publishedAtRaw is! String || publishedAtRaw.isEmpty) {
+      throw const FormatException(
+        'PublicPoem.published_at is required for public poems.',
+      );
+    }
+
+    return PublicPoem(
+      id: id,
+      title: title,
+      content: content,
+      authorId: authorId,
+      authorAnonymousName: anonymousName,
+      authorAvatarUrl: avatarUrl as String?,
+      poetryTypeId: poetryTypeId,
+      poetryTypeName: poetryTypeName,
+      publishedAt: DateTime.parse(publishedAtRaw),
+      createdAt: DateTime.parse(createdAt),
+    );
+  }
+
+  static int _parsePoetryTypeId(Object? raw) {
+    return switch (raw) {
+      final int value => value,
+      final num value => value.toInt(),
+      _ => throw const FormatException(
+        'PublicPoem.poetry_type_id is missing or invalid.',
+      ),
+    };
   }
 }
