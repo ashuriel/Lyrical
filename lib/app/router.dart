@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/app/router_refresh.dart';
 import 'package:lyrical/app/splash_screen.dart';
+import 'package:lyrical/core/constants/app_strings.dart';
+import 'package:lyrical/core/widgets/error_state_view.dart';
 import 'package:lyrical/core/widgets/main_shell.dart';
 import 'package:lyrical/features/auth/presentation/login_screen.dart';
 import 'package:lyrical/features/auth/presentation/register_screen.dart';
@@ -20,6 +22,12 @@ import 'package:lyrical/features/profile/providers/profile_providers.dart';
 import 'package:lyrical/features/public_profile/presentation/public_profile_screen.dart';
 import 'package:lyrical/features/publish/presentation/publish_screen.dart';
 import 'package:lyrical/features/search/presentation/search_screen.dart';
+
+/// Named routes used by navigation helpers.
+abstract final class AppRouteNames {
+  static const String publicProfile = 'public-profile';
+  static const String profile = 'profile';
+}
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
@@ -127,34 +135,64 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/welcome',
         builder: (context, state) => const WelcomeScreen(),
       ),
-      GoRoute(path: '/app', redirect: (context, state) => '/app/explore'),
+      // `/app` parent owns full-screen overlays (users, poems) and merges with
+      // StatefulShellRoute branch paths (`/app/explore`, …).
+      //
+      // Public profile and poem detail use [parentNavigatorKey] so they stack
+      // above the shell — bottom navigation is hidden (same as before).
       GoRoute(
-        path: '/app/poems/:poemId',
-        parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) {
-          final poemId = state.pathParameters['poemId']!;
-          return PoemDetailScreen(poemId: poemId);
-        },
-      ),
-      GoRoute(
-        path: '/app/users/:userId',
-        parentNavigatorKey: _rootNavigatorKey,
+        path: '/app',
         redirect: (context, state) {
-          final userId = state.pathParameters['userId'];
-          final currentId = ref
-              .read(supabaseClientProvider)
-              .auth
-              .currentUser
-              ?.id;
-          if (userId != null && currentId != null && userId == currentId) {
-            return '/app/profile';
-          }
+          // Exact `/app` only. Never redirect `/app/users/...` or shell tabs.
+          if (state.uri.path == '/app') return '/app/explore';
           return null;
         },
-        builder: (context, state) {
-          final userId = state.pathParameters['userId']!;
-          return PublicProfileScreen(userId: userId);
-        },
+        routes: [
+          GoRoute(
+            path: 'poems/:poemId',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) {
+              final poemId = state.pathParameters['poemId']?.trim() ?? '';
+              if (poemId.isEmpty) {
+                return const Scaffold(
+                  body: ErrorStateView(message: AppStrings.poemUnavailable),
+                );
+              }
+              return PoemDetailScreen(poemId: poemId);
+            },
+          ),
+          GoRoute(
+            name: AppRouteNames.publicProfile,
+            path: 'users/:userId',
+            parentNavigatorKey: _rootNavigatorKey,
+            redirect: (context, state) {
+              final userId = state.pathParameters['userId'];
+              if (userId == null || userId.trim().isEmpty) {
+                return '/app/explore';
+              }
+              final currentId = ref
+                  .read(supabaseClientProvider)
+                  .auth
+                  .currentUser
+                  ?.id;
+              if (currentId != null && userId == currentId) {
+                return '/app/profile';
+              }
+              return null;
+            },
+            builder: (context, state) {
+              final userId = state.pathParameters['userId']?.trim() ?? '';
+              if (userId.isEmpty) {
+                return const Scaffold(
+                  body: ErrorStateView(
+                    message: AppStrings.publicProfileUnavailable,
+                  ),
+                );
+              }
+              return PublicProfileScreen(userId: userId);
+            },
+          ),
+        ],
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -188,6 +226,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                name: AppRouteNames.profile,
                 path: '/app/profile',
                 builder: (context, state) => const ProfileScreen(),
                 routes: [

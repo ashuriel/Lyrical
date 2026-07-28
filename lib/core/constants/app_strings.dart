@@ -212,4 +212,6 @@ abstract final class AppStrings {
   static const String unfollowConfirmBody =
       '¿Quieres dejar de seguir a esta identidad?';
   static const String unfollowConfirmAction = 'Dejar de seguir';
+  static const String publicProfileUnavailable =
+      'No pudimos abrir este perfil.';
 }
