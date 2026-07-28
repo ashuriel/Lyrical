@@ -11,6 +11,15 @@ abstract final class PoemErrorMapper {
     if (error is PostgrestException) {
       final code = error.code;
       final message = error.message.toLowerCase();
+      if (message.contains('authentication required')) {
+        return 'No hay una sesión activa.';
+      }
+      if (message.contains('already deleted')) {
+        return 'Este poema ya fue eliminado.';
+      }
+      if (message.contains('not found') || message.contains('not authorized')) {
+        return 'No se pudo eliminar el poema. Inténtalo de nuevo.';
+      }
       if (code == '42501' || message.contains('row-level security')) {
         return 'No tienes permiso para realizar esta acción.';
       }

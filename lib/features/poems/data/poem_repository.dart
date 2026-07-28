@@ -134,24 +134,14 @@ poetry_types ( name )
   }
 
   Future<void> softDeletePoem(String poemId) async {
-    final userId = _requireUserId();
-
-    // Confirm the poem exists and is owned before soft-deleting.
-    // After deleted_at is set, SELECT policies hide the row, so we cannot
-    // rely on .select() returning the updated poem.
-    await fetchCurrentUserPoemById(poemId);
+    _requireUserId();
 
     try {
-      await _client
-          .from('poems')
-          .update({'deleted_at': DateTime.now().toUtc().toIso8601String()})
-          .eq('id', poemId)
-          .eq('author_id', userId)
-          .isFilter('deleted_at', null);
+      await _client.rpc('soft_delete_poem', params: {'p_poem_id': poemId});
     } on AppException {
       rethrow;
     } catch (error) {
-      throw AppException(PoemErrorMapper.map(error));
+      throw AppException(_mapSoftDeleteError(error));
     }
   }
 
@@ -245,6 +235,28 @@ poetry_types ( name )
     final mapped = PoemErrorMapper.map(error);
     if (mapped == 'Ocurrió un error inesperado. Inténtalo de nuevo.') {
       return 'No se pudo enviar el poema a revisión. Inténtalo de nuevo.';
+    }
+    return mapped;
+  }
+
+  String _mapSoftDeleteError(Object error) {
+    if (error is PostgrestException) {
+      final message = error.message.toLowerCase();
+      if (message.contains('authentication required')) {
+        return 'No hay una sesión activa.';
+      }
+      if (message.contains('already deleted')) {
+        return 'Este poema ya fue eliminado.';
+      }
+      if (message.contains('not found') ||
+          message.contains('not authorized') ||
+          message.contains('row-level security')) {
+        return 'No se pudo eliminar el poema. Inténtalo de nuevo.';
+      }
+    }
+    final mapped = PoemErrorMapper.map(error);
+    if (mapped == 'Ocurrió un error inesperado. Inténtalo de nuevo.') {
+      return 'No se pudo eliminar el poema. Inténtalo de nuevo.';
     }
     return mapped;
   }
