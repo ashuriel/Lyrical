@@ -9,6 +9,7 @@ import 'package:lyrical/features/auth/presentation/register_screen.dart';
 import 'package:lyrical/features/auth/presentation/verify_email_screen.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
 import 'package:lyrical/features/explore/presentation/explore_screen.dart';
+import 'package:lyrical/features/profile/presentation/edit_profile_screen.dart';
 import 'package:lyrical/features/profile/presentation/entry_screen.dart';
 import 'package:lyrical/features/profile/presentation/profile_screen.dart';
 import 'package:lyrical/features/profile/presentation/welcome_screen.dart';
@@ -157,6 +158,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/app/profile',
                 builder: (context, state) => const ProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => const EditProfileScreen(),
+                  ),
+                ],
               ),
             ],
           ),

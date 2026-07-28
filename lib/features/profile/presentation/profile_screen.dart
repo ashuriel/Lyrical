@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
 import 'package:lyrical/core/widgets/app_avatar.dart';
@@ -148,7 +149,7 @@ class _ProfileBody extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
           FilledButton.tonal(
-            onPressed: () {},
+            onPressed: () => context.push('/app/profile/edit'),
             child: const Text(AppStrings.editProfile),
           ),
           const SizedBox(height: AppSpacing.xl),

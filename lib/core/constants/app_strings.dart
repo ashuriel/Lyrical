@@ -102,4 +102,21 @@ abstract final class AppStrings {
   static const String mockFollowing = 'Siguiendo';
   static const String genderFemale = 'Mujer';
   static const String genderMale = 'Hombre';
+
+  static const String changePhoto = 'Cambiar foto';
+  static const String poeticIdentityLabel = 'Identidad poética';
+  static const String poeticIdentityImmutable =
+      'Tu identidad poética no puede modificarse.';
+  static const String genderLabel = 'Género';
+  static const String bioLabel = 'Biografía';
+  static const String saveProfile = 'Guardar cambios';
+  static const String profileSaveSuccess = 'Perfil actualizado correctamente.';
+  static const String discardProfileEditsTitle = '¿Descartar cambios?';
+  static const String discardProfileEditsBody =
+      'Tienes cambios sin guardar. Si sales ahora, se perderán.';
+  static const String avatarUnsupportedFormat =
+      'Formato no admitido. Usa JPG, PNG o WEBP.';
+  static const String avatarTooLarge =
+      'La imagen es demasiado grande. El máximo es 5 MB.';
+  static const String avatarUploadSuccess = 'Foto actualizada correctamente.';
 }
