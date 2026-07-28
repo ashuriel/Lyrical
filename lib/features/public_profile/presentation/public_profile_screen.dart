@@ -110,10 +110,18 @@ class _PublicProfileScreenState extends ConsumerState<PublicProfileScreen> {
       ),
       body: profileAsync.when(
         loading: () => const LoadingStateView(),
-        error: (error, _) => ErrorStateView(
-          message: PoemErrorMapper.map(error),
-          onRetry: () => ref.invalidate(publicProfileProvider(userId)),
-        ),
+        error: (error, _) {
+          final message = error is AppException
+              ? error.message
+              : PoemErrorMapper.map(error);
+          return ErrorStateView(
+            message: message,
+            onRetry: () {
+              ref.invalidate(publicProfileProvider(userId));
+              ref.invalidate(authorPoemsProvider(userId));
+            },
+          );
+        },
         data: (profile) {
           final genderLabel = _genderLabel(profile.gender);
           final bio = profile.bio?.trim();
@@ -233,7 +241,9 @@ class _PublicProfileScreenState extends ConsumerState<PublicProfileScreen> {
                       ),
                     ),
                     error: (error, _) => ErrorStateView(
-                      message: PoemErrorMapper.map(error),
+                      message: error is AppException
+                          ? error.message
+                          : PoemErrorMapper.map(error),
                       onRetry: () =>
                           ref.invalidate(authorPoemsProvider(userId)),
                     ),

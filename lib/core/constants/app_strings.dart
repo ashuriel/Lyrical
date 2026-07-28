@@ -214,6 +214,12 @@ abstract final class AppStrings {
   static const String unfollowConfirmAction = 'Dejar de seguir';
   static const String publicProfileUnavailable =
       'No pudimos abrir este perfil.';
+  static const String publicProfileNotFound = 'No encontramos esta identidad.';
+  static const String publicProfileLoadError = 'No pudimos cargar este perfil.';
+  static const String publicProfileRpcMissing =
+      'Esta función aún no está configurada.';
+  static const String publicProfileNetworkError =
+      'Comprueba tu conexión e inténtalo de nuevo.';
 
   static const String notificationsTitle = 'Notificaciones';
   static const String notificationsMarkAllRead = 'Marcar todo como leído';

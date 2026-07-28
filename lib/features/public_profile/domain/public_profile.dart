@@ -59,26 +59,15 @@ class PublicProfile {
   }
 
   factory PublicProfile.fromJson(Map<String, dynamic> json) {
-    final userId = json['user_id'];
+    final userId = _parseUuid(json['user_id'], field: 'user_id');
     final anonymousName = json['anonymous_name'];
-    final createdAt = json['created_at'];
     final gender = json['gender'];
     final bio = json['bio'];
     final avatarUrl = json['avatar_url'];
 
-    if (userId is! String || userId.isEmpty) {
-      throw const FormatException(
-        'PublicProfile.user_id is missing or invalid.',
-      );
-    }
     if (anonymousName is! String || anonymousName.isEmpty) {
       throw const FormatException(
         'PublicProfile.anonymous_name is missing or invalid.',
-      );
-    }
-    if (createdAt is! String || createdAt.isEmpty) {
-      throw const FormatException(
-        'PublicProfile.created_at is missing or invalid.',
       );
     }
     if (gender != null && gender is! String) {
@@ -97,33 +86,55 @@ class PublicProfile {
       gender: gender as String?,
       bio: bio as String?,
       avatarUrl: avatarUrl as String?,
-      createdAt: DateTime.parse(createdAt),
-      publishedPoemCount: _parseCount(json['published_poem_count']),
-      followerCount: _parseCount(json['follower_count']),
-      followingCount: _parseCount(json['following_count']),
-      isFollowedByCurrentUser: _parseBool(
+      createdAt: _parseDateTime(json['created_at']),
+      publishedPoemCount: parseCount(json['published_poem_count']),
+      followerCount: parseCount(json['follower_count']),
+      followingCount: parseCount(json['following_count']),
+      isFollowedByCurrentUser: parseBool(
         json['is_followed_by_current_user'],
         field: 'is_followed_by_current_user',
       ),
-      isCurrentUser: _parseBool(
+      isCurrentUser: parseBool(
         json['is_current_user'],
         field: 'is_current_user',
       ),
     );
   }
 
-  static int _parseCount(Object? raw) {
+  static String _parseUuid(Object? raw, {required String field}) {
+    if (raw is String && raw.isNotEmpty) return raw;
+    // Some JSON codecs stringify UUIDs via toString()-compatible values.
+    if (raw != null) {
+      final text = raw.toString();
+      if (text.isNotEmpty && text != 'null') return text;
+    }
+    throw FormatException('PublicProfile.$field is missing or invalid.');
+  }
+
+  static DateTime _parseDateTime(Object? raw) {
+    if (raw is DateTime) return raw;
+    if (raw is String && raw.isNotEmpty) return DateTime.parse(raw);
+    throw const FormatException(
+      'PublicProfile.created_at is missing or invalid.',
+    );
+  }
+
+  /// Accepts int, num, or numeric strings from PostgREST/json.
+  static int parseCount(Object? raw) {
     return switch (raw) {
       final int value => value,
       final num value => value.toInt(),
+      final String value when int.tryParse(value) != null => int.parse(value),
       _ => throw const FormatException(
         'PublicProfile count field is missing or invalid.',
       ),
     };
   }
 
-  static bool _parseBool(Object? raw, {required String field}) {
+  static bool parseBool(Object? raw, {required String field}) {
     if (raw is bool) return raw;
+    if (raw == 'true' || raw == 't') return true;
+    if (raw == 'false' || raw == 'f') return false;
     throw FormatException('PublicProfile.$field is missing or invalid.');
   }
 }
