@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lyrical/app/router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/errors/poem_error_mapper.dart';
 import 'package:lyrical/core/navigation/open_author_profile.dart';
@@ -11,6 +12,7 @@ import 'package:lyrical/core/widgets/compact_poem_card.dart';
 import 'package:lyrical/core/widgets/featured_poem_card.dart';
 import 'package:lyrical/features/explore/domain/public_poem.dart';
 import 'package:lyrical/features/explore/providers/explore_providers.dart';
+import 'package:lyrical/features/notifications/providers/notification_providers.dart';
 import 'package:lyrical/features/profile/providers/profile_providers.dart';
 
 class ExploreScreen extends ConsumerWidget {
@@ -29,6 +31,8 @@ class ExploreScreen extends ConsumerWidget {
     final discoveryAsync = ref.watch(discoveryPoemsProvider);
     final monthlyAsync = ref.watch(monthlySelectionProvider);
     final recentAsync = ref.watch(recentPoemsProvider);
+    final unreadAsync = ref.watch(unreadNotificationCountProvider);
+    final unreadCount = unreadAsync.asData?.value ?? 0;
 
     return Scaffold(
       body: AppPage(
@@ -61,10 +65,25 @@ class ExploreScreen extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      tooltip: AppStrings.notificationsTooltip,
-                      icon: const Icon(Icons.notifications_none_outlined),
+                    Semantics(
+                      button: true,
+                      label: AppStrings.notificationsBadgeSemantic(unreadCount),
+                      child: IconButton(
+                        onPressed: () =>
+                            context.pushNamed(AppRouteNames.notifications),
+                        tooltip: AppStrings.notificationsTooltip,
+                        icon: Badge(
+                          isLabelVisible: unreadCount > 0,
+                          label: Text(
+                            unreadCount > 99 ? '99+' : '$unreadCount',
+                          ),
+                          child: Icon(
+                            unreadCount > 0
+                                ? Icons.notifications
+                                : Icons.notifications_none_outlined,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

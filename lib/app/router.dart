@@ -14,6 +14,7 @@ import 'package:lyrical/features/engagement/presentation/saved_poems_screen.dart
 import 'package:lyrical/features/explore/presentation/explore_screen.dart';
 import 'package:lyrical/features/poems/presentation/my_poems_screen.dart';
 import 'package:lyrical/features/poems/presentation/poem_detail_screen.dart';
+import 'package:lyrical/features/notifications/presentation/notifications_screen.dart';
 import 'package:lyrical/features/profile/presentation/edit_profile_screen.dart';
 import 'package:lyrical/features/profile/presentation/entry_screen.dart';
 import 'package:lyrical/features/profile/presentation/profile_screen.dart';
@@ -27,6 +28,7 @@ import 'package:lyrical/features/search/presentation/search_screen.dart';
 abstract final class AppRouteNames {
   static const String publicProfile = 'public-profile';
   static const String profile = 'profile';
+  static const String notifications = 'notifications';
 }
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -191,6 +193,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               }
               return PublicProfileScreen(userId: userId);
             },
+          ),
+          GoRoute(
+            name: AppRouteNames.notifications,
+            path: 'notifications',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) => const NotificationsScreen(),
           ),
         ],
       ),

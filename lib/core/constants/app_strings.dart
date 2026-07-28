@@ -214,4 +214,39 @@ abstract final class AppStrings {
   static const String unfollowConfirmAction = 'Dejar de seguir';
   static const String publicProfileUnavailable =
       'No pudimos abrir este perfil.';
+
+  static const String notificationsTitle = 'Notificaciones';
+  static const String notificationsMarkAllRead = 'Marcar todo como leído';
+  static const String notificationsEmptyTitle = 'Sin notificaciones';
+  static const String notificationsEmptyMessage =
+      'No tienes notificaciones por ahora.';
+  static const String notificationUnknownActor = 'Alguien';
+  static const String notificationUnknownPoem = 'tu poema';
+  static const String notificationDestinationUnavailable =
+      'Este contenido ya no está disponible.';
+  static const String notificationJustNow = 'Ahora';
+
+  static String notificationNewFollower(String actor) =>
+      '$actor comenzó a seguirte.';
+
+  static String notificationPoemLiked(String actor, String poemTitle) =>
+      'A $actor le gustó tu poema «$poemTitle».';
+
+  static String notificationPoemApproved(String poemTitle) =>
+      'Tu poema «$poemTitle» fue aprobado.';
+
+  static String notificationPoemRejected(String poemTitle) =>
+      'Tu poema «$poemTitle» no fue aprobado.';
+
+  static String notificationMinutesAgo(int minutes) => 'Hace $minutes min';
+
+  static String notificationHoursAgo(int hours) => 'Hace $hours h';
+
+  static String notificationDaysAgo(int days) => 'Hace $days d';
+
+  static String notificationsBadgeSemantic(int count) {
+    if (count <= 0) return notificationsTooltip;
+    if (count == 1) return '1 notificación sin leer';
+    return '$count notificaciones sin leer';
+  }
 }
