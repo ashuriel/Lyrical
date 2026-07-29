@@ -1,6 +1,5 @@
 <div align="center">
 
-<img src="assets/images/lyrical_logo.png" width="120" alt="Logo de Lyrical">
 
 # Lyrical
 
