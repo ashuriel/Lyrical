@@ -18,7 +18,10 @@ class MainShell extends StatelessWidget {
       bottomNavigationBar: DecoratedBox(
         decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: scheme.outlineVariant, width: 1),
+            top: BorderSide(
+              color: scheme.outlineVariant.withValues(alpha: 0.55),
+              width: 1,
+            ),
           ),
         ),
         child: NavigationBar(

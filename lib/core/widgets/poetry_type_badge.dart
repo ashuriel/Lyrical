@@ -13,18 +13,24 @@ class PoetryTypeBadge extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
+        horizontal: AppSpacing.sm + 2,
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: scheme.tertiaryContainer,
+        color: scheme.tertiaryContainer.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+        border: Border.all(
+          color: scheme.outlineVariant.withValues(alpha: 0.55),
+        ),
       ),
       child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(
+        label.toUpperCase(),
+        style: theme.textTheme.labelSmall?.copyWith(
           color: scheme.onTertiaryContainer,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.7,
+          fontSize: 10.5,
+          height: 1.2,
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,

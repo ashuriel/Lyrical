@@ -26,8 +26,19 @@ class EmptyStateView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 36, color: scheme.tertiary),
-          const SizedBox(height: AppSpacing.md),
+          Container(
+            width: 72,
+            height: 72,
+            decoration: BoxDecoration(
+              color: scheme.tertiaryContainer.withValues(alpha: 0.7),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: scheme.outlineVariant.withValues(alpha: 0.6),
+              ),
+            ),
+            child: Icon(icon, size: 32, color: scheme.tertiary),
+          ),
+          const SizedBox(height: AppSpacing.lg),
           Text(
             title,
             style: theme.textTheme.titleLarge,
@@ -36,7 +47,7 @@ class EmptyStateView extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text(
             message,
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
             textAlign: TextAlign.center,
           ),
         ],

@@ -187,7 +187,10 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                 children: [
                   Text(
                     poem.title,
-                    style: theme.textTheme.headlineSmall?.copyWith(height: 1.3),
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      height: 1.28,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Wrap(
@@ -258,13 +261,20 @@ class _PoemDetailScreenState extends ConsumerState<PoemDetailScreen>
                     isPubliclyVisible:
                         poem.status == PoemStatus.approved && !poem.isHidden,
                   ),
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: AppSpacing.lg),
+                  Divider(
+                    height: AppSpacing.xl,
+                    color: theme.colorScheme.outlineVariant.withValues(
+                      alpha: 0.65,
+                    ),
+                  ),
                   SelectableText(
                     poem.content,
                     style: theme.textTheme.bodyLarge?.copyWith(
-                      height: 1.75,
-                      fontSize: 17,
+                      height: 1.85,
+                      fontSize: 17.5,
                       fontWeight: FontWeight.w400,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   if (poem.isOwner) ...[

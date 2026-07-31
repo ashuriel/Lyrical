@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lyrical/core/theme/app_colors.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
 
@@ -21,6 +22,7 @@ abstract final class AppTheme {
     muted: AppColors.lightSecondaryText,
     subtle: AppColors.lightSubtleText,
     border: AppColors.lightBorder,
+    paperBorder: AppColors.lightPaperBorder,
     divider: AppColors.lightDivider,
     error: AppColors.lightError,
     success: AppColors.lightSuccess,
@@ -43,6 +45,7 @@ abstract final class AppTheme {
     muted: AppColors.darkSecondaryText,
     subtle: AppColors.darkSecondaryText,
     border: AppColors.darkBorder,
+    paperBorder: AppColors.darkPaperBorder,
     divider: AppColors.darkDivider,
     error: AppColors.darkError,
     success: AppColors.darkSuccess,
@@ -65,6 +68,7 @@ abstract final class AppTheme {
     required Color muted,
     required Color subtle,
     required Color border,
+    required Color paperBorder,
     required Color divider,
     required Color error,
     required Color success,
@@ -89,7 +93,7 @@ abstract final class AppTheme {
       onSurface: text,
       onSurfaceVariant: muted,
       outline: border,
-      outlineVariant: divider,
+      outlineVariant: paperBorder,
       surfaceContainerLowest: background,
       surfaceContainerLow: secondaryBackground,
       surfaceContainer: elevatedSurface,
@@ -102,77 +106,83 @@ abstract final class AppTheme {
           : AppColors.lightSageSurface,
     );
 
-    final baseText = ThemeData(
+    final softBorder = paperBorder.withValues(alpha: 0.85);
+    final inputIdleBorder = paperBorder.withValues(alpha: 0.95);
+
+    final baseSans = ThemeData(
       useMaterial3: true,
       brightness: brightness,
     ).textTheme.apply(bodyColor: text, displayColor: text);
 
-    final textTheme = baseText.copyWith(
-      headlineLarge: baseText.headlineLarge?.copyWith(
+    final literata = GoogleFonts.literataTextTheme(baseSans);
+
+    final textTheme = literata.copyWith(
+      headlineLarge: literata.headlineLarge?.copyWith(
         fontWeight: FontWeight.w600,
         height: 1.25,
         letterSpacing: 0.05,
         color: text,
       ),
-      headlineMedium: baseText.headlineMedium?.copyWith(
+      headlineMedium: literata.headlineMedium?.copyWith(
         fontWeight: FontWeight.w600,
         height: 1.28,
         color: text,
       ),
-      headlineSmall: baseText.headlineSmall?.copyWith(
+      headlineSmall: literata.headlineSmall?.copyWith(
         fontWeight: FontWeight.w600,
         height: 1.3,
         color: text,
       ),
-      titleLarge: baseText.titleLarge?.copyWith(
+      titleLarge: literata.titleLarge?.copyWith(
         fontWeight: FontWeight.w600,
         height: 1.3,
         color: text,
       ),
-      titleMedium: baseText.titleMedium?.copyWith(
+      titleMedium: literata.titleMedium?.copyWith(
         fontWeight: FontWeight.w600,
         height: 1.35,
         color: text,
       ),
-      titleSmall: baseText.titleSmall?.copyWith(
+      titleSmall: literata.titleSmall?.copyWith(
         fontWeight: FontWeight.w500,
         height: 1.35,
         color: text,
       ),
-      bodyLarge: baseText.bodyLarge?.copyWith(
-        height: 1.65,
-        fontSize: 16,
+      bodyLarge: literata.bodyLarge?.copyWith(
+        height: 1.7,
+        fontSize: 16.5,
         color: text,
         fontWeight: FontWeight.w400,
       ),
-      bodyMedium: baseText.bodyMedium?.copyWith(
+      bodyMedium: baseSans.bodyMedium?.copyWith(
         height: 1.55,
         color: muted,
         fontWeight: FontWeight.w400,
       ),
-      bodySmall: baseText.bodySmall?.copyWith(
+      bodySmall: baseSans.bodySmall?.copyWith(
         height: 1.45,
         color: subtle,
         fontWeight: FontWeight.w400,
       ),
-      labelLarge: baseText.labelLarge?.copyWith(
+      labelLarge: baseSans.labelLarge?.copyWith(
         fontWeight: FontWeight.w600,
         letterSpacing: 0.1,
         color: text,
       ),
-      labelMedium: baseText.labelMedium?.copyWith(
+      labelMedium: baseSans.labelMedium?.copyWith(
         fontWeight: FontWeight.w500,
         color: muted,
       ),
-      labelSmall: baseText.labelSmall?.copyWith(
+      labelSmall: baseSans.labelSmall?.copyWith(
         fontWeight: FontWeight.w500,
+        letterSpacing: 0.4,
         color: subtle,
       ),
     );
 
-    final shape = RoundedRectangleBorder(
+    final cardShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-      side: BorderSide(color: border, width: 1.1),
+      side: BorderSide(color: softBorder, width: 1),
     );
 
     final buttonShape = RoundedRectangleBorder(
@@ -185,7 +195,7 @@ abstract final class AppTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
       canvasColor: background,
-      dividerColor: divider,
+      dividerColor: divider.withValues(alpha: 0.45),
       textTheme: textTheme,
       primaryColor: primary,
       appBarTheme: AppBarTheme(
@@ -203,7 +213,7 @@ abstract final class AppTheme {
         elevation: 0,
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-        shape: shape,
+        shape: cardShape,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
       ),
@@ -218,7 +228,11 @@ abstract final class AppTheme {
         titleTextStyle: textTheme.titleLarge,
         contentTextStyle: textTheme.bodyLarge?.copyWith(color: muted),
       ),
-      dividerTheme: DividerThemeData(color: divider, thickness: 1, space: 1),
+      dividerTheme: DividerThemeData(
+        color: divider.withValues(alpha: 0.4),
+        thickness: 1,
+        space: 1,
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface,
@@ -228,11 +242,11 @@ abstract final class AppTheme {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          borderSide: BorderSide(color: border),
+          borderSide: BorderSide(color: inputIdleBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          borderSide: BorderSide(color: border),
+          borderSide: BorderSide(color: inputIdleBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -285,7 +299,7 @@ abstract final class AppTheme {
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.sm + 2,
           ),
-          side: BorderSide(color: primary.withValues(alpha: 0.65)),
+          side: BorderSide(color: primary.withValues(alpha: 0.55)),
           shape: buttonShape,
           textStyle: textTheme.labelLarge?.copyWith(color: primary),
         ),
@@ -349,7 +363,7 @@ abstract final class AppTheme {
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: primary,
-        circularTrackColor: border.withValues(alpha: 0.5),
+        circularTrackColor: paperBorder.withValues(alpha: 0.5),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
@@ -382,6 +396,7 @@ abstract final class AppTheme {
           success: success,
           subtleText: subtle,
           secondaryBackground: secondaryBackground,
+          paperBorder: softBorder,
           readingMaxWidth: AppSpacing.maxReadingWidth,
         ),
       ],
@@ -389,19 +404,21 @@ abstract final class AppTheme {
   }
 }
 
-/// Optional extras beyond ColorScheme (success, reading width).
+/// Optional extras beyond ColorScheme (success, reading width, soft borders).
 @immutable
 class LyricalExtras extends ThemeExtension<LyricalExtras> {
   const LyricalExtras({
     required this.success,
     required this.subtleText,
     required this.secondaryBackground,
+    required this.paperBorder,
     required this.readingMaxWidth,
   });
 
   final Color success;
   final Color subtleText;
   final Color secondaryBackground;
+  final Color paperBorder;
   final double readingMaxWidth;
 
   static LyricalExtras of(BuildContext context) {
@@ -413,12 +430,14 @@ class LyricalExtras extends ThemeExtension<LyricalExtras> {
     Color? success,
     Color? subtleText,
     Color? secondaryBackground,
+    Color? paperBorder,
     double? readingMaxWidth,
   }) {
     return LyricalExtras(
       success: success ?? this.success,
       subtleText: subtleText ?? this.subtleText,
       secondaryBackground: secondaryBackground ?? this.secondaryBackground,
+      paperBorder: paperBorder ?? this.paperBorder,
       readingMaxWidth: readingMaxWidth ?? this.readingMaxWidth,
     );
   }
@@ -432,6 +451,7 @@ class LyricalExtras extends ThemeExtension<LyricalExtras> {
       secondaryBackground:
           Color.lerp(secondaryBackground, other.secondaryBackground, t) ??
           secondaryBackground,
+      paperBorder: Color.lerp(paperBorder, other.paperBorder, t) ?? paperBorder,
       readingMaxWidth: t < 0.5 ? readingMaxWidth : other.readingMaxWidth,
     );
   }

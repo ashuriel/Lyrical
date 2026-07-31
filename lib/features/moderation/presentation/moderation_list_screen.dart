@@ -151,7 +151,9 @@ class _PendingPoemTile extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          border: Border.all(color: scheme.outline),
+          border: Border.all(
+            color: scheme.outlineVariant.withValues(alpha: 0.85),
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

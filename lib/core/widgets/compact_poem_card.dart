@@ -28,12 +28,13 @@ class CompactPoemCard extends StatelessWidget {
         '${poem.publishedAt.year}';
 
     return Card(
+      color: scheme.surface,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         child: Container(
           width: compact ? 240 : double.infinity,
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: EdgeInsets.all(compact ? AppSpacing.md : AppSpacing.md + 2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -42,7 +43,7 @@ class CompactPoemCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
                 Text(
                   poem.title,
-                  style: theme.textTheme.titleMedium,
+                  style: theme.textTheme.titleMedium?.copyWith(height: 1.3),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -53,7 +54,9 @@ class CompactPoemCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         poem.title,
-                        style: theme.textTheme.titleMedium,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          height: 1.3,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -68,8 +71,9 @@ class CompactPoemCard extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  height: 1.6,
-                  color: scheme.onSurface,
+                  height: 1.65,
+                  fontSize: 15.5,
+                  color: scheme.onSurface.withValues(alpha: 0.92),
                   fontWeight: FontWeight.w400,
                 ),
               ),

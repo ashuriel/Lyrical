@@ -195,9 +195,13 @@ class _PublishScreenState extends ConsumerState<PublishScreen> {
                     controller: _contentController,
                     enabled: !isSubmitting,
                     maxLength: PoemRepository.maxContentLength,
-                    minLines: 10,
-                    maxLines: 18,
+                    minLines: 12,
+                    maxLines: 20,
                     textCapitalization: TextCapitalization.sentences,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      height: 1.75,
+                      fontSize: 16.5,
+                    ),
                     decoration: const InputDecoration(
                       labelText: AppStrings.poemContentLabel,
                       alignLabelWithHint: true,

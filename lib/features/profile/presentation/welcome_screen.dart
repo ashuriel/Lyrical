@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lyrical/app/theme.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
+import 'package:lyrical/core/theme/app_spacing.dart';
 import 'package:lyrical/core/widgets/app_logo.dart';
 import 'package:lyrical/features/profile/domain/profile.dart';
 import 'package:lyrical/features/profile/providers/profile_providers.dart';
@@ -21,7 +23,7 @@ class WelcomeScreen extends ConsumerWidget {
         body: SafeArea(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               child: Text(error.toString(), textAlign: TextAlign.center),
             ),
           ),
@@ -59,6 +61,8 @@ class _WelcomeContentState extends ConsumerState<_WelcomeContent> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final extras = LyricalExtras.of(context);
     final actionState = ref.watch(completeOnboardingControllerProvider);
     final isLoading = actionState.isLoading;
     final errorMessage = actionState.hasError
@@ -69,51 +73,76 @@ class _WelcomeContentState extends ConsumerState<_WelcomeContent> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 40),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg + 4,
+              vertical: AppSpacing.xxl,
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 440),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Center(child: AppLogo(size: 96, showTitle: true)),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: AppSpacing.xxl),
                   Text(
                     AppStrings.welcomeHeading,
-                    style: theme.textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 36),
-                  Text(
-                    AppStrings.welcomeIdentityLabel,
-                    style: theme.textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    widget.profile.anonymousName,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      height: 1.35,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: scheme.primary,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: AppSpacing.xl),
+                  Text(
+                    AppStrings.welcomeIdentityLabel,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: AppSpacing.sm + 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                      vertical: AppSpacing.md,
+                    ),
+                    decoration: BoxDecoration(
+                      color: scheme.surface,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      border: Border.all(
+                        color: extras.paperBorder,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    child: Text(
+                      widget.profile.anonymousName,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        height: 1.35,
+                        color: scheme.primary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
                   Text(
                     AppStrings.welcomeDescription,
-                    style: theme.textTheme.bodyLarge,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      height: 1.65,
+                      color: scheme.onSurfaceVariant,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   if (errorMessage != null) ...[
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.lg),
                     Text(
                       errorMessage,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.error,
+                        color: scheme.error,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ],
-                  const SizedBox(height: 40),
+                  const SizedBox(height: AppSpacing.xxl),
                   FilledButton(
                     onPressed: isLoading ? null : _enter,
                     child: isLoading

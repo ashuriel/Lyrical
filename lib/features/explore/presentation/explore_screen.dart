@@ -71,8 +71,9 @@ class ExploreScreen extends ConsumerWidget {
                             const SizedBox(height: AppSpacing.sm),
                             Text(
                               '${AppStrings.exploreGreetingPrefix} $anonymousName',
-                              style: theme.textTheme.bodyLarge?.copyWith(
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
+                                height: 1.4,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lyrical/app/theme.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
 
 class ProfileMenuTile extends StatelessWidget {
@@ -21,6 +22,7 @@ class ProfileMenuTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final paperBorder = LyricalExtras.of(context).paperBorder;
 
     return Material(
       color: scheme.surface,
@@ -36,7 +38,7 @@ class ProfileMenuTile extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-            border: Border.all(color: scheme.outline, width: 1.1),
+            border: Border.all(color: paperBorder, width: 1),
           ),
           child: Row(
             children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
+import 'package:lyrical/core/theme/app_spacing.dart';
 import 'package:lyrical/core/utils/validators.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
 
@@ -63,7 +64,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.xl,
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
               child: Form(
@@ -73,16 +77,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   children: [
                     Text(
                       AppStrings.registerTitle,
-                      style: theme.textTheme.headlineMedium,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       AppStrings.registerSubtitle,
-                      style: theme.textTheme.bodyLarge,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        height: 1.5,
+                      ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: AppSpacing.xl),
                     TextFormField(
                       controller: _emailController,
                       enabled: !isLoading,
@@ -91,11 +100,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         labelText: AppStrings.emailLabel,
-                        border: OutlineInputBorder(),
                       ),
                       validator: Validators.email,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     TextFormField(
                       controller: _passwordController,
                       enabled: !isLoading,
@@ -104,7 +112,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: AppStrings.passwordLabel,
-                        border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           onPressed: isLoading
                               ? null
@@ -125,7 +132,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ),
                       validator: Validators.registrationPassword,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     TextFormField(
                       controller: _confirmPasswordController,
                       enabled: !isLoading,
@@ -135,7 +142,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       onFieldSubmitted: (_) => _submit(),
                       decoration: InputDecoration(
                         labelText: AppStrings.confirmPasswordLabel,
-                        border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           onPressed: isLoading
                               ? null
@@ -161,7 +167,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ),
                     ),
                     if (errorMessage != null) ...[
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.md),
                       Text(
                         errorMessage,
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -169,7 +175,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                       ),
                     ],
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSpacing.lg),
                     FilledButton(
                       onPressed: isLoading ? null : _submit,
                       child: isLoading
@@ -180,7 +186,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             )
                           : const Text(AppStrings.registerButton),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     TextButton(
                       onPressed: isLoading ? null : () => context.go('/login'),
                       child: const Text(AppStrings.goToLogin),

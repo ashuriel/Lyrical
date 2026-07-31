@@ -16,9 +16,12 @@ abstract final class AppColors {
   static const Color lightSecondaryText = Color(0xFF667069);
   static const Color lightSubtleText = Color(0xFF7D857F);
 
-  /// Ink-green edges and lines (not beige).
+  /// Ink-green edges (inputs / focus). Prefer softer paper borders in UI chrome.
   static const Color lightBorder = Color(0xFF35594B);
   static const Color lightDivider = Color(0xFF6F8578);
+
+  /// Soft edge for cards and menu tiles on paper surfaces.
+  static const Color lightPaperBorder = Color(0xFFB7C4BC);
   static const Color lightError = Color(0xFF8B3A3A);
   static const Color lightOnPrimary = Color(0xFFFAF7F0);
   static const Color lightSuccess = Color(0xFF35594B);
@@ -34,6 +37,7 @@ abstract final class AppColors {
   static const Color darkSecondary = Color(0xFF7F9B89);
   static const Color darkBorder = Color(0xFF32433A);
   static const Color darkDivider = Color(0xFF29382F);
+  static const Color darkPaperBorder = Color(0xFF3D4F45);
   static const Color darkError = Color(0xFFC87878);
   static const Color darkOnPrimary = Color(0xFF101814);
   static const Color darkSuccess = Color(0xFF7F9B89);
