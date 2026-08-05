@@ -94,15 +94,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               }
 
               final profileAsync = ref.read(currentProfileProvider);
+              // Stay on welcome while profile reloads after avatar/gender/bio
+              // saves; redirecting to /entry remounts onboarding at step 1.
               if (profileAsync.isLoading) {
+                if (isWelcome) return null;
                 return '/entry';
               }
               if (profileAsync.hasError) {
+                if (isWelcome) return null;
                 return '/entry';
               }
 
               final profile = profileAsync.asData?.value;
               if (profile == null) {
+                if (isWelcome) return null;
                 return '/entry';
               }
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lyrical/app/theme.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
+import 'package:lyrical/core/theme/theme_mode_provider.dart';
 import 'package:lyrical/core/widgets/app_avatar.dart';
 import 'package:lyrical/core/widgets/app_page.dart';
 import 'package:lyrical/core/widgets/error_state_view.dart';
@@ -233,6 +235,10 @@ class _ProfileBody extends ConsumerWidget {
           ),
           ..._adminModerationSection(context, ref, theme, scheme),
           const SizedBox(height: AppSpacing.xl),
+          Text(AppStrings.appearanceSection, style: theme.textTheme.titleLarge),
+          const SizedBox(height: AppSpacing.md),
+          const _DarkModeTile(),
+          const SizedBox(height: AppSpacing.xl),
           if (signOutError != null) ...[
             Text(
               signOutError!,
@@ -252,6 +258,70 @@ class _ProfileBody extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
         ],
+      ),
+    );
+  }
+}
+
+class _DarkModeTile extends ConsumerWidget {
+  const _DarkModeTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final themeMode = ref.watch(themeModeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+
+    return Material(
+      color: scheme.surface,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: AppSpacing.minTapTarget),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          border: Border.all(
+            color:
+                theme.extension<LyricalExtras>()?.paperBorder ??
+                scheme.outlineVariant,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+              color: scheme.onSurfaceVariant,
+              size: 22,
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppStrings.darkModeLabel,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    AppStrings.darkModeSubtitle,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            Switch.adaptive(
+              value: isDark,
+              onChanged: (value) {
+                ref.read(themeModeProvider.notifier).setDarkMode(value);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lyrical/app/router.dart';
 import 'package:lyrical/app/theme.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
+import 'package:lyrical/core/theme/theme_mode_provider.dart';
 
 class LyricalApp extends ConsumerWidget {
   const LyricalApp({super.key});
@@ -11,13 +12,14 @@ class LyricalApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(goRouterProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return MaterialApp.router(
       title: AppStrings.appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.light,
+      themeMode: themeMode,
       locale: const Locale('es'),
       supportedLocales: const [Locale('es'), Locale('en')],
       localizationsDelegates: const [

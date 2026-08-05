@@ -61,6 +61,37 @@ abstract final class AppStrings {
       'En Lyrical, tu nombre real no importa. Aquí, tus palabras hablan por ti.';
   static const String welcomeEnterButton = 'Entrar a Lyrical';
 
+  static const String onboardingNext = 'Siguiente';
+  static const String onboardingBack = 'Atrás';
+  static const String onboardingSkip = 'Omitir';
+
+  static const String onboardingIntroTitle = 'Poesía anónima, con calma';
+  static const String onboardingIntroBody =
+      'Lyrical es un espacio para leer y compartir poemas sin mostrar tu nombre real. '
+      'Tu correo permanece privado; en público solo se ve tu identidad poética.';
+
+  static const String onboardingNameTitle = 'Tu identidad poética';
+  static const String onboardingNameBody =
+      'Te asignamos un nombre anónimo único. No se puede cambiar: será tu firma en Lyrical.';
+
+  static const String onboardingProfileTitle = 'Personaliza tu perfil';
+  static const String onboardingProfileBody =
+      'Elige un género (opcional) y una foto de perfil. Podrás cambiarlos después.';
+  static const String onboardingAddPhoto = 'Subir foto';
+
+  static const String onboardingBioTitle = 'Cuéntanos un poco';
+  static const String onboardingBioBody =
+      'Una biografía breve ayuda a otros a conocerte. Es opcional.';
+  static const String onboardingBioHint = 'Escribe unas líneas sobre ti…';
+
+  static const String onboardingReadyTitle = 'Todo listo';
+  static const String onboardingReadyBody =
+      'Ya puedes explorar poemas, publicar los tuyos y seguir a otras voces anónimas. '
+      'Bienvenido a Lyrical.';
+
+  static String onboardingStepLabel(int current, int total) =>
+      '$current / $total';
+
   static const String poemOfTheDay = 'Poema del día';
   static const String discoverSomethingNew = 'Descubre algo nuevo';
   static const String monthlySelection = 'Selección del mes';
@@ -106,6 +137,11 @@ abstract final class AppStrings {
   static const String poemsHidden = 'Ocultos';
   static const String poemsRejected = 'Rechazados';
   static const String settingsTooltip = 'Ajustes';
+  static const String appearanceSection = 'Apariencia';
+  static const String darkModeLabel = 'Modo oscuro';
+  static const String darkModeSubtitle =
+      'Usa la paleta oscura de tinta y bosque.';
+
   static const String mockCountersNote = 'Contadores de demostración';
   static const String mockPublished = 'Publicados';
   static const String mockFollowers = 'Seguidores';
