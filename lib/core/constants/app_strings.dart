@@ -30,7 +30,7 @@ abstract final class AppStrings {
   static const String confirmPasswordLabel = 'Confirmar contraseña';
 
   static const String loginTitle = 'Iniciar sesión';
-  static const String loginSubtitle = 'Entra con tu correo privado.';
+  static const String loginSubtitle = 'Bienvenidos';
   static const String loginButton = 'Iniciar sesión';
   static const String goToRegister = 'Crear una cuenta';
 

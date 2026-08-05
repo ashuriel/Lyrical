@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lyrical/core/constants/app_strings.dart';
+import 'package:lyrical/core/theme/app_spacing.dart';
+import 'package:lyrical/core/widgets/auth_ambient_background.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
@@ -46,77 +48,82 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     final canResend = email != null && email.isNotEmpty;
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    AppStrings.verifyTitle,
-                    style: theme.textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    AppStrings.verifyBody,
-                    style: theme.textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  if (canResend) ...[
-                    const SizedBox(height: 20),
+      body: AuthAmbientBackground(
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.xl,
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
                     Text(
-                      AppStrings.verifyEmailSentTo,
-                      style: theme.textTheme.bodyMedium,
+                      AppStrings.verifyTitle,
+                      style: theme.textTheme.headlineMedium,
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppSpacing.md),
                     Text(
-                      email,
-                      style: theme.textTheme.titleMedium,
+                      AppStrings.verifyBody,
+                      style: theme.textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
-                  ],
-                  if (_successMessage != null) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      _successMessage!,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.primary,
+                    if (canResend) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        AppStrings.verifyEmailSentTo,
+                        style: theme.textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                  if (errorMessage != null) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      errorMessage,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.error,
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        email,
+                        style: theme.textTheme.titleMedium,
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
+                    ],
+                    if (_successMessage != null) ...[
+                      const SizedBox(height: AppSpacing.md),
+                      Text(
+                        _successMessage!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                    if (errorMessage != null) ...[
+                      const SizedBox(height: AppSpacing.md),
+                      Text(
+                        errorMessage,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.error,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                    const SizedBox(height: AppSpacing.xl),
+                    FilledButton(
+                      onPressed: !canResend || isLoading ? null : _resend,
+                      child: isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text(AppStrings.resendEmailButton),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    TextButton(
+                      onPressed: isLoading ? null : () => context.go('/login'),
+                      child: const Text(AppStrings.backToLogin),
                     ),
                   ],
-                  const SizedBox(height: 28),
-                  FilledButton(
-                    onPressed: !canResend || isLoading ? null : _resend,
-                    child: isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text(AppStrings.resendEmailButton),
-                  ),
-                  const SizedBox(height: 12),
-                  TextButton(
-                    onPressed: isLoading ? null : () => context.go('/login'),
-                    child: const Text(AppStrings.backToLogin),
-                  ),
-                ],
+                ),
               ),
             ),
           ),

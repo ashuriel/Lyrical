@@ -5,6 +5,7 @@ import 'package:lyrical/core/constants/app_strings.dart';
 import 'package:lyrical/core/theme/app_spacing.dart';
 import 'package:lyrical/core/utils/validators.dart';
 import 'package:lyrical/core/widgets/app_logo.dart';
+import 'package:lyrical/core/widgets/auth_ambient_background.dart';
 import 'package:lyrical/features/auth/providers/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -50,102 +51,106 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         : null;
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.xl,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Center(
-                      child: AppLogo(size: 112, showTitle: true, spacing: 16),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      AppStrings.loginSubtitle,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        height: 1.5,
+      body: AuthAmbientBackground(
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.xl,
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Center(
+                        child: AppLogo(size: 112, showTitle: true, spacing: 16),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    TextFormField(
-                      controller: _emailController,
-                      enabled: !isLoading,
-                      keyboardType: TextInputType.emailAddress,
-                      autofillHints: const [AutofillHints.email],
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: AppStrings.emailLabel,
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        AppStrings.loginSubtitle,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      validator: Validators.email,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    TextFormField(
-                      controller: _passwordController,
-                      enabled: !isLoading,
-                      obscureText: _obscurePassword,
-                      autofillHints: const [AutofillHints.password],
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => _submit(),
-                      decoration: InputDecoration(
-                        labelText: AppStrings.passwordLabel,
-                        suffixIcon: IconButton(
-                          onPressed: isLoading
-                              ? null
-                              : () {
-                                  setState(() {
-                                    _obscurePassword = !_obscurePassword;
-                                  });
-                                },
-                          tooltip: _obscurePassword
-                              ? AppStrings.showPassword
-                              : AppStrings.hidePassword,
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
+                      const SizedBox(height: AppSpacing.xl),
+                      TextFormField(
+                        controller: _emailController,
+                        enabled: !isLoading,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          labelText: AppStrings.emailLabel,
+                        ),
+                        validator: Validators.email,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      TextFormField(
+                        controller: _passwordController,
+                        enabled: !isLoading,
+                        obscureText: _obscurePassword,
+                        autofillHints: const [AutofillHints.password],
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _submit(),
+                        decoration: InputDecoration(
+                          labelText: AppStrings.passwordLabel,
+                          suffixIcon: IconButton(
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                            tooltip: _obscurePassword
+                                ? AppStrings.showPassword
+                                : AppStrings.hidePassword,
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
                           ),
                         ),
+                        validator: Validators.requiredPassword,
                       ),
-                      validator: Validators.requiredPassword,
-                    ),
-                    if (errorMessage != null) ...[
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        errorMessage,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.error,
+                      if (errorMessage != null) ...[
+                        const SizedBox(height: AppSpacing.md),
+                        Text(
+                          errorMessage,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.error,
+                          ),
                         ),
+                      ],
+                      const SizedBox(height: AppSpacing.lg),
+                      FilledButton(
+                        onPressed: isLoading ? null : _submit,
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(AppStrings.loginButton),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      TextButton(
+                        onPressed: isLoading
+                            ? null
+                            : () => context.go('/register'),
+                        child: const Text(AppStrings.goToRegister),
                       ),
                     ],
-                    const SizedBox(height: AppSpacing.lg),
-                    FilledButton(
-                      onPressed: isLoading ? null : _submit,
-                      child: isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text(AppStrings.loginButton),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    TextButton(
-                      onPressed: isLoading
-                          ? null
-                          : () => context.go('/register'),
-                      child: const Text(AppStrings.goToRegister),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
